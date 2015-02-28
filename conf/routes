@@ -5,7 +5,7 @@
 # Home page
 GET     /                           controllers.Application.index
 
-GET     /test                       controllers.Application.test
+GET     /test/:name                 controllers.Application.test(name: String)
 POST    /test                       controllers.Application.testPost
 
 # Map static resources from the /public folder to the /assets URL path
