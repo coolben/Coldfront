@@ -1,5 +1,0 @@
-[0m[[31merror[0m] [0m/Users/vu/winter-is-coming/conf/routes:8: value test is not a member of object controllers.Application[0m
-[0m[[31merror[0m] [0mGET     /test                       controllers.Application.test[0m
-[0m[[31merror[0m] [0m/Users/vu/winter-is-coming/conf/routes:8: value test is not a member of object controllers.Application[0m
-[0m[[31merror[0m] [0mGET     /test                       controllers.Application.test[0m
-[0m[[31merror[0m] [0mtwo errors found[0m
