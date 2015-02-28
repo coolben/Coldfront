@@ -22,19 +22,19 @@ object Application extends Controller {
     Ok(Json.toJson("list all patients"))
   }
   
-  def getPatient(patientId: Long){
+  def getPatient(patientId: Long) = Action {
       Ok(Json.toJson("patient id: " + patientId))
   }
   
-  def getConditions(patientId: Long){
+  def getConditions(patientId: Long) = Action {
       Ok(Json.toJson("return conditions for patient id: " + patientId))
   }
   
-  def getMedications(patientId: Long){
+  def getMedications(patientId: Long) = Action {
       Ok(Json.toJson("return medications for patient id: " + patientId))
   }
   
-  def getObservations(patientId: Long){
+  def getObservations(patientId: Long) = Action {
       Ok(Json.toJson("return observations for patient id: " + patientId))
   }
 
