@@ -2,6 +2,8 @@ logs/
 target/
 project/project/
 project/target/
+project/.sbtserver
+project/.sbtserver.lock
 
 # Compiled source #
 ###################
