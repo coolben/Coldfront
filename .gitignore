@@ -1,5 +1,7 @@
 logs/
 target/
+project/project/
+project/target/
 
 # Compiled source #
 ###################
