@@ -3,7 +3,12 @@ package controllers
 import play.api._
 import play.api.mvc._
 import play.api.libs.json._
-
+import play.api.Play.current
+import play.api.libs.ws._
+import play.api.libs.ws.ning.NingAsyncHttpClientConfigBuilder
+import scala.concurrent.Future
+//import play.api.libs.concurrent.Execution.Implicits._
+import scala.concurrent.ExecutionContext.Implicits.global
 object Application extends Controller {
 
   def index = Action {
@@ -18,8 +23,12 @@ object Application extends Controller {
     Ok(Json.toJson("POST SUCCESS"))
   }
   
-  def listPatients = Action{
-    Ok(Json.toJson("list all patients"))
+  def listPatients = Action.async {
+    val url = "http://fhirtest.uhn.ca/baseDstu1/Patient?_format=json"
+    WS.url(url).get().map { response =>
+        Ok(response.json)
+    }
+    //Ok(Json.toJson("list all patients"))
   }
   
   def getPatient(patientId: Long) = Action {
