@@ -1,6 +1,31 @@
 <html>
-<head>
+<script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js" charset="utf-8"></script>
+<script src="bower_components/angular-route/angular-route.js"></script>
 
+<script src="js/script.js" charset="utf-8"></script>
+<style>
+
+.chart div {
+  font: 10px sans-serif;
+  background-color: steelblue;
+  text-align: right;
+  padding: 3px;
+  margin: 1px;
+  color: white;
+}
+
+</style>
 </head>
-<body></body>
+<body>
+
+<div ng-app="phoneApp">
+  <div ng-controller="AppCtrl">
+    <div class="button" ng-click="AppCtrl.sayHi()">Click me!</div>
+  </div>
+</div>
+
+</body>
+
 </html>
+
