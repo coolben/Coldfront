@@ -1,31 +1,150 @@
 <html>
-<script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js" charset="utf-8"></script>
-<script src="bower_components/angular-route/angular-route.js"></script>
+<!--<script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>-->
 
-<script src="js/script.js" charset="utf-8"></script>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Coldfront</title>
+  <link rel="stylesheet" href="css/foundation.css" />
+  <script src="js/vendor/modernizr.js"></script>
+
+  <!--Angular-->
+  <script src="bower_components/angular/angular.js" charset="utf-8"></script>
+  <script src="bower_components/angular-route/angular-route.js"></script>
+
+  <script src="js/script.js" charset="utf-8"></script>
+
+  <!--Polymer-->
+  <script src="bower_components/webcomponentsjs/webcomponents.js"></script>
+  <link rel="import" href="bower_components/core-toolbar/core-toolbar.html">
+  <link rel="import" href="bower_components/core-menu/core-menu.html">
+  <link rel="import" href="bower_components/core-item/core-item.html">
+  <link rel="import" href="bower_components/core-pages/core-pages.html">
+  <link rel="import" href="bower_components/core-overlay/core-overlay.html">
+  <link rel="import" href="bower_components/core-header-panel/core-header-panel.html">
+  <link rel="import" href="bower_components/core-drawer-panel/core-drawer-panel.html">
+  <link rel="import" href="bower_components/core-icons/core-icons.html">
+	<link rel="import" href="bower_components/core-scaffold/core-scaffold.html">
+  <link rel="import" href="bower_components/paper-input/paper-input.html">
+  <link rel="import" href="bower_components/paper-icon-button/paper-icon-button.html">
+  <link rel="import" href="bower_components/paper-tabs/paper-tabs.html">
+  <link rel="import" href="bower_components/paper-shadow/paper-shadow.html">
+  <link rel="import" href="bower_components/font-roboto/roboto.html">  
+  <link rel="import" href="bower_components/core-collapse/core-collapse.html">
+  <link rel="import" href="bower_components/core-menu/core-menu.html">
+  <link rel="import" href="bower_components/paper-dropdown/paper-dropdown.html">
+  <link rel="import" href="bower_components/paper-item/paper-item.html">
+  <link rel="import" href="bower_components/paper-dropdown-menu/paper-dropdown-menu.html">  
+  <link rel="import" href="bower_components/paper-dialog/paper-dialog.html">  
+  <link rel="import" href="bower_components/paper-dialog/paper-dialog-base.html">  
 <style>
-
-.chart div {
-  font: 10px sans-serif;
-  background-color: steelblue;
-  text-align: right;
-  padding: 3px;
-  margin: 1px;
-  color: white;
+body {
+  font-family: sans-serif;
+}
+core-header-panel {
+  background: white;
+}
+core-toolbar {
+  background-color: #03A9F4;
+}
+#navheader {
+  background-color: #56BA89;
+}
+.content {
+  background-color:#dddddd;
+}
+/* drawer is always visible on a wide screen
+   so menu button isn't required */
+core-drawer-panel:not([narrow]) #navicon {
+  display: none;
 }
 
+.header-1{
+	background:#e66;
+	padding: 20px;
+}
+
+div[drawer]{
+	background: #2196F3;
+	min-width: 300px
+}
+
+div[main]{
+	padding-left:20px;
+	padding-right:20px;
+}
+
+ul{
+	margin-bottom: 0
+}
+
+.patient-sidebar{
+	float:right;min-height:500px;background:#E91E63;width:300px;z-index:5;float:right
+}
 </style>
 </head>
-<body>
+<body fullbleed vertical layout unresolved ng-app="coldfront">
+<core-toolbar class='medium-tall' ng-controller='ToolbarController'>
 
-<div ng-app="phoneApp">
-  <div ng-controller="AppCtrl">
-    <div class="button" ng-click="AppCtrl.sayHi()">Click me!</div>
-  </div>
-</div>
+  <paper-icon-button id="navicon" icon="menu"></paper-icon-button>
+		<span flex  ng-hide="!search">Coldfront</span>
+		<paper-icon-button  id="searchbutton" icon="search"  ng-hide="search" ng-click="searchfunction()"></paper-icon-button>
+		<paper-input  flex label="" ng-hide="search"></paper-input>
+		<paper-icon-button  ng-hide="!search" id="searchbutton" icon="search" ng-click="opensearch()"></paper-icon-button>
+		<a  href="#"><img src="img/female.png" style="width:50px;height:auto" /></a>
+
+    <div class="bottom fit" horizontal layout>
+		  <paper-tabs  flex style='max-width:400px' selected="0">
+    		<paper-tab>Task List</paper-tab>
+    		<paper-tab>Patient List</paper-tab>
+  		</paper-tabs>
+  	</div>
+  </core-toolbar>
+  <core-pages selected="0" fancy>
+  	<div ng-controller="PatientController">
+		<div vertical layout >
+			<div>
+				<paper-shadow z="2">
+					<div horizontal layout flex class="header-1">
+			 			My Patients / 8 south
+					</div>
+				</paper-shadow>
+				</div>	
+				<div flex main >
+					<paper-dropdown-menu label="Filter Patients" style='float:right'>
+				    <paper-dropdown class="dropdown">
+				        <core-menu class="menu">
+			            <paper-item>7 South</paper-item>
+			            <paper-item>8 North</paper-item>
+			            <paper-item>Recent</paper-item>
+			            <paper-item>All</paper-item>
+			  	      </core-menu>
+				    </paper-dropdown>
+					</paper-dropdown-menu>
+					jbjkjk
+				</div>
+				<paper-dialog id='dialog2' transition="core-transition-center">
+				  <p>Some content</p>
+				</paper-dialog>
+	  	</div>
+	  	</div>
+	  <div>
+	  Two
+	  </div>
+	 </core-pages>
 
 </body>
 
-</html>
 
+<script type="text/javascript">
+
+var tabs = document.querySelector('paper-tabs');
+var pages = document.querySelector('core-pages');
+pages.selected = 0; 
+tabs.selected=0;
+tabs.addEventListener('core-select',function(){
+  pages.selected = tabs.selected;
+});
+document.querySelector('paper-dialog').toggle();
+</script>
+
+</html>
