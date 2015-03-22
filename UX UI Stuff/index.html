@@ -94,8 +94,8 @@ ul{
 
     <div class="bottom fit" horizontal layout>
 		  <paper-tabs  flex style='max-width:400px' selected="0">
-    		<paper-tab>Task List</paper-tab>
     		<paper-tab>Patient List</paper-tab>
+    		<paper-tab>Task List</paper-tab>
   		</paper-tabs>
   	</div>
   </core-toolbar>
@@ -110,8 +110,8 @@ ul{
 				</paper-shadow>
 				</div>	
 				<div flex main >
-					<paper-dropdown-menu label="Filter Patients" style='float:right'>
-				    <paper-dropdown class="dropdown">
+					<paper-dropdown-menu label="Filter Patients" style='float:right;width:130px'>
+				    <paper-dropdown class="dropdown" >
 				        <core-menu class="menu">
 			            <paper-item>7 South</paper-item>
 			            <paper-item>8 North</paper-item>
@@ -128,7 +128,18 @@ ul{
 	  	</div>
 	  	</div>
 	  <div>
-	  Two
+	  	<table class='large-10 large-offset-1'>
+	  		<thead>
+	  			<tr>
+	  				<th>Patients</th>
+	  				<th>To do</th>
+	  				<th>In Progress</th>
+	  				<th>Done</th>
+	  				<th>Preview</th>
+	  			</tr>
+	  		</thead>
+	  	</table>
+
 	  </div>
 	 </core-pages>
 
