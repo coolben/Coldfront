@@ -12,6 +12,13 @@
   <script src="bower_components/angular-route/angular-route.js"></script>
 
   <script src="./js/script.js" charset="utf-8"></script>
+  <script type="text/javascript">
+    window.onload = function () {
+	    var url = window.location;
+		var detailsPane = document.getElementById("details");
+		detailsPane.innerHTML = "Patient MRN is " + (url.search.split('MRN=')[1] ? url.search.split('MRN=')[1] : "No record found.");
+	}
+  </script>
 
   <!--Polymer-->
   <script src="bower_components/webcomponentsjs/webcomponents.js"></script>
@@ -94,60 +101,15 @@ ul{
 
     <div class="bottom fit" horizontal layout>
 		  <paper-tabs  flex style='max-width:400px' selected="0">
-    		<paper-tab>Patient List</paper-tab>
     		<paper-tab>Task List</paper-tab>
+    		<paper-tab>Patient List</paper-tab>
   		</paper-tabs>
   	</div>
   </core-toolbar>
-  <core-pages selected="0" fancy>
-  	<div ng-controller="PatientController">
-		<div vertical layout >
-			<div>
-				<paper-shadow z="2">
-					<div horizontal layout flex class="header-1">
-			 			My Patients / 8 south
-					</div>
-				</paper-shadow>
-				</div>	
-				<div flex main >
-					<paper-dropdown-menu label="Filter Patients" style='float:right;width:130px'>
-				    <paper-dropdown class="dropdown" >
-				        <core-menu class="menu">
-			            <paper-item>7 South</paper-item>
-			            <paper-item>8 North</paper-item>
-			            <paper-item>Recent</paper-item>
-			            <paper-item>All</paper-item>
-			  	      </core-menu>
-				    </paper-dropdown>
-					</paper-dropdown-menu>
-					<h2>
-						Patient List
-						<paper-icon-button  id="refreshButton" icon="refresh" text="Refresh" ng-click="populatePatients()"></paper-icon-button>
-					</h2>
-					<div id="patientTable">
-												
-					</div>
-				</div>
-				<paper-dialog id='dialog2' transition="core-transition-center">
-				  <p>Some content</p>
-				</paper-dialog>
-	  	</div>
-	  	</div>
-	  <div>
-	  	<table class='large-10 large-offset-1'>
-	  		<thead>
-	  			<tr>
-	  				<th>Patients</th>
-	  				<th>To do</th>
-	  				<th>In Progress</th>
-	  				<th>Done</th>
-	  				<th>Preview</th>
-	  			</tr>
-	  		</thead>
-	  	</table>
-
-	  </div>
-	 </core-pages>
+  
+  <div id="details">
+  	
+  </div>
 
 </body>
 
