@@ -16,7 +16,7 @@
     window.onload = function () {
 	    var url = window.location;
 		var detailsPane = document.getElementById("details");
-		detailsPane.innerHTML = "Patient MRN is " + (url.search.split('MRN=')[1] ? url.search.split('MRN=')[1] : "No record found.");
+	//	detailsPane.innerHTML = "Patient MRN is " + (url.search.split('MRN=')[1] ? url.search.split('MRN=')[1] : "No record found.");
 	}
   </script>
 
@@ -87,6 +87,16 @@ ul{
 .patient-sidebar{
 	float:right;min-height:500px;background:#E91E63;width:300px;z-index:5;float:right
 }
+
+.card{
+  margin: 20px;
+  padding: 10px;
+}
+
+.datetext{
+	font-style: italic;
+
+}
 </style>
 </head>
 <body fullbleed vertical layout unresolved ng-app="coldfront">
@@ -108,7 +118,36 @@ ul{
   </core-toolbar>
   
   <div id="details">
-  	
+	  <div class='row' ng-controller='PatientDetailsController'>
+			<paper-shadow class='card large-4 medium-6 small-12 columns' z="1">
+				<img src="img/female.png" style="width:50px;height:auto" /><h4 style="display:inline"> Marla Dixon</h4>
+				<br />
+				<span>Address: 302, 10th St., Atlanta</span><br/>
+				<span>Email:   marla@iamsick.com</span><br/>
+				<span>Phone:   (302) 303 3030  </span>
+			</paper-shadow>
+			<paper-shadow class='card large-7 medium-5 small-12 columns' z='1'>
+				<h4>Pending Action Items:</h4>
+				<ul>
+					<li>Give the patient medicine</li>
+					<li>Heal him</li>
+				</ul>
+			</paper-shadow>
+		</div>
+		<div class='row' ng-controller='OtherController'>
+	    <paper-shadow class='card large-10 large-offset-1 medium-10 medium-offset-1 small-12 columns' z='1'>
+				<a href="#">Notes</a>
+				<a href="#">Labs</a>
+				<a href="#">Orders</a>	    
+				<h4>Notes:</h4>
+				<ul>
+					<li>
+					<div class='datetext'>September, 5, 2014</div>
+					Give the patient medicine</li>
+					<li>Heal him</li>
+				</ul>
+	    </paper-shadow>
+	  </div>
   </div>
 
 </body>
