@@ -91,3 +91,11 @@ app.controller('PatientController',  function($scope) {
 	}
  });
 
+app.controller('PatientDetailsController',function($scope){
+
+});
+
+app.controller('OtherController',function($scope){
+
+});
+
