@@ -1,4 +1,12 @@
-var app=angular.module("coldfront",[]);
+var app=angular.module("coldfront",[])
+.config( [
+    '$compileProvider',
+    function( $compileProvider )
+    {   
+        $compileProvider.aHrefSanitizationWhitelist(/^\s*(https?|ftp|mailto|file):/);
+        // Angular before v1.2 uses $compileProvider.urlSanitizationWhitelist(...)
+    }
+]);
 
 app.controller('ToolbarController',  function($scope) {
  	$scope.search=true;
@@ -57,7 +65,8 @@ app.controller('PatientController',  function($scope) {
 	            else {
 	            	cell.innerHTML = patients[i][j];
 	            }
-	        }
+	        }	
+	        row.ngClick = "patientPopup(patients[i][1])";   
 	    }
 
 	    //Get patient table to populate data
@@ -66,10 +75,19 @@ app.controller('PatientController',  function($scope) {
       	pTable.appendChild(table);
 	}
 
+	$scope.patientPopup = function (id) {
+		alert("Patient Pop Up.");
+		$location.path('#/patientPage.html?MRN=' + id);
+	}
+
 	$scope.patientDetails = function () {
 		var url = window.location;
 		var detailsPane = document.getElementById("details");
 		detailsPane.innerHTML = (url.search.split('MRN=')[1] ? url.search.split('MRN=')[1] : "No record found.");
+	}
+
+	return {
+		populatePatients: $scope.populatePatients
 	}
  });
 
