@@ -130,20 +130,19 @@ ul{
 						<paper-icon-button  id="refreshButton" icon="refresh" text="Refresh" ng-click="populatePatients()"></paper-icon-button>
 					</h2>
 					<template is="auto-binding">
-						<section on-tap="{{openDialog}}">
-							<button>Popup</button>
+						<section on-tap="{{openDialog}}">					
+							<div id="patientTable">
+														
+							</div>
 							<paper-dialog id="dialog" heading="Patient View"
 							              transition="paper-dialog-transition-bottom">
 							  <p>This app would like to launch a small, unmanned vehicle
 							     into space.</p>
 							  <paper-button dismissive>Cancel</paper-button>
 							  <paper-button affirmative default>OK</paper-button>
-							</paper-dialog>
+							</paper-dialog>															
 						</section>
-					</template>					
-					<div id="patientTable">
-												
-					</div>
+					</template>	
 				</div>
 				<paper-dialog id='dialog2' transition="core-transition-center">
 				  <p>Some content</p>
@@ -173,11 +172,12 @@ ul{
 
 var popup = document.querySelector('template[is=auto-binding]');
 popup.openDialog = function(e) {
-	document.getElementById("dialog").innerHTML='<object type="type/html" data="patientPage.html" ></object>';
+	document.getElementById("dialog").innerHTML='<object type="type/html" data="patientPage.html" width="100%" height="100%"></object>';
 	if (e.target.localName != 'button') {
 	  return;
 	}
-	var d = e.target.nextElementSibling;
+	//var d = e.target.nextElementSibling;
+	var d = document.getElementById("dialog");
 	if (!d) {
 	  return;
 	}

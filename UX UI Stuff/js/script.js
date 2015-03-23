@@ -60,7 +60,8 @@ app.controller('PatientController',  function($scope) {
 	        for (var j = 0; j < columnCount; j++) {
 	            var cell = row.insertCell(-1);
 	            if (j == 0) {
-	            	cell.innerHTML = "<a href=\"patientPage.html?MRN=" + patients[i][1] + "\"/>" + patients[i][j];	                      
+	            	//cell.innerHTML = "<a href=\"patientPage.html?MRN=" + patients[i][1] + "\"/>" + patients[i][j];	                      
+	            	cell.innerHTML = "<button>" + patients[i][j] + "</button>"
 	            }
 	            else {
 	            	cell.innerHTML = patients[i][j];
@@ -93,4 +94,3 @@ app.controller('PatientDetailsController',function($scope){
 app.controller('OtherController',function($scope){
 
 });
-
