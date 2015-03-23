@@ -46,6 +46,8 @@
 <style>
 body {
   font-family: sans-serif;
+  height:300px;
+  width:200px;
 }
 core-header-panel {
   background: white;
@@ -100,7 +102,7 @@ ul{
 </style>
 </head>
 <body fullbleed vertical layout unresolved ng-app="coldfront">
-<core-toolbar class='medium-tall' ng-controller='ToolbarController'>
+<!-- <core-toolbar class='medium-tall' ng-controller='ToolbarController'>
 
   <paper-icon-button id="navicon" icon="menu"></paper-icon-button>
 		<span flex  ng-hide="!search">Coldfront</span>
@@ -115,7 +117,7 @@ ul{
     		<paper-tab>Patient List</paper-tab>
   		</paper-tabs>
   	</div>
-  </core-toolbar>
+  </core-toolbar> -->
   
   <div id="details">
 	  <div class='row' ng-controller='PatientDetailsController'>

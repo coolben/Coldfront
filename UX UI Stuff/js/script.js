@@ -75,11 +75,6 @@ app.controller('PatientController',  function($scope) {
       	pTable.appendChild(table);
 	}
 
-	$scope.patientPopup = function (id) {
-		alert("Patient Pop Up.");
-		$location.path('#/patientPage.html?MRN=' + id);
-	}
-
 	$scope.patientDetails = function () {
 		var url = window.location;
 		var detailsPane = document.getElementById("details");

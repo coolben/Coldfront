@@ -80,6 +80,11 @@ ul{
 .patient-sidebar{
 	float:right;min-height:500px;background:#E91E63;width:300px;z-index:5;float:right
 }
+
+#dialog{
+	width:75%;
+	height:75%;
+}
 </style>
 </head>
 <body fullbleed vertical layout unresolved ng-app="coldfront">
@@ -127,7 +132,7 @@ ul{
 					<template is="auto-binding">
 						<section on-tap="{{openDialog}}">
 							<button>Popup</button>
-							<paper-dialog id="dialog" heading="Launch?"
+							<paper-dialog id="dialog" heading="Patient View"
 							              transition="paper-dialog-transition-bottom">
 							  <p>This app would like to launch a small, unmanned vehicle
 							     into space.</p>
