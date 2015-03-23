@@ -124,6 +124,18 @@ ul{
 						Patient List
 						<paper-icon-button  id="refreshButton" icon="refresh" text="Refresh" ng-click="populatePatients()"></paper-icon-button>
 					</h2>
+					<template is="auto-binding">
+						<section on-tap="{{openDialog}}">
+							<button>Popup</button>
+							<paper-dialog id="dialog" heading="Launch?"
+							              transition="paper-dialog-transition-bottom">
+							  <p>This app would like to launch a small, unmanned vehicle
+							     into space.</p>
+							  <paper-button dismissive>Cancel</paper-button>
+							  <paper-button affirmative default>OK</paper-button>
+							</paper-dialog>
+						</section>
+					</template>					
 					<div id="patientTable">
 												
 					</div>
@@ -154,6 +166,18 @@ ul{
 
 <script type="text/javascript">
 
+var popup = document.querySelector('template[is=auto-binding]');
+popup.openDialog = function(e) {
+	document.getElementById("dialog").innerHTML='<object type="type/html" data="patientPage.html" ></object>';
+	if (e.target.localName != 'button') {
+	  return;
+	}
+	var d = e.target.nextElementSibling;
+	if (!d) {
+	  return;
+	}
+d.toggle();
+};
 var tabs = document.querySelector('paper-tabs');
 var pages = document.querySelector('core-pages');
 pages.selected = 0; 
@@ -162,6 +186,7 @@ tabs.addEventListener('core-select',function(){
   pages.selected = tabs.selected;
 });
 document.querySelector('paper-dialog').toggle();
+
 </script>
 
 </html>
