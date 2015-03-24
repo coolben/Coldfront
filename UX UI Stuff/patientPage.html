@@ -136,16 +136,35 @@ ul{
 		</div>
 		<div class='row' ng-controller='OtherController'>
 	    <paper-shadow class='card large-10 large-offset-1 medium-10 medium-offset-1 small-12 columns' z='1'>
-				<a href="#">Notes</a>
-				<a href="#">Labs</a>
-				<a href="#">Orders</a>	    
-				<h4>Notes:</h4>
-				<ul>
-					<li>
-					<div class='datetext'>September, 5, 2014</div>
-					Give the patient medicine</li>
-					<li>Heal him</li>
-				</ul>
+            <paper-tabs selected="{{selected}}">
+                <paper-tab>Notes</paper-tab>
+                <paper-tab>Labs</paper-tab>
+                <paper-tab>Orders</paper-tab>
+            </paper-tabs>
+
+            <core-pages selected="{{selected}}">
+                <div>
+                    <ul ng-repeat="note in notes">
+                        <li>{{note.text}}</li>
+                        <li>
+                            <div class='datetext'>{{note.createdBy}}, {{note.created}}</div></li>
+                    </ul>
+                </div>
+                <div>
+                    <ul ng-repeat="lab in labs">
+                        <li>{{lab.text}}</li>
+                        <li>
+                            <div class='datetext'>{{lab.created}}</div></li>
+                    </ul>
+                </div>
+                <div>
+                    <ul ng-repeat="order in orders">
+                        <li>{{order.text}}</li>
+                        <li>Ordered: {{order.orderedBy}}, {{order.ordered}}</li>
+                        <li>Completed: {{order.completedBy}}, {{order.completedOn}}</li>
+                    </ul>
+                </div>
+            </core-pages>
 	    </paper-shadow>
 	  </div>
   </div>

@@ -92,5 +92,10 @@ app.controller('PatientDetailsController',function($scope){
 });
 
 app.controller('OtherController',function($scope){
+    // TODO: use FHIR or our backend to populate scope variables
+    $scope.notes = [{"text": "Note 1", "created": "3/5/2015", "createdBy": "Dr. Evil"},
+                    {"text": "Note 2", "created": "3/6/2015", "createdBy": "Vu Nguyen"}];
+    $scope.orders = [{"text": "Order 1", "ordered": "3/5/2015", "orderedBy": "Dr. Love", "completed": "", "completedBy": "Uncle Ben", "completedOn": "3/5/2015"}];
 
+    $scope.labs = [{"text": "lab 1", "result": "result text", "created": "3/5/2015"}];
 });
