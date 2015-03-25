@@ -9,6 +9,7 @@ var app=angular.module("coldfront",[])
 ]);
 
 app.controller('ToolbarController',  function($scope) {
+
  	$scope.search=true;
  	$scope.searchfunction=function(){
 
@@ -22,24 +23,29 @@ app.controller('ToolbarController',  function($scope) {
 
 
 app.controller('PatientController',  function($scope) {
- 	$scope.search=true;
- 	$scope.searchfunction=function(){
-		$scope.search=true;
-	}
+	var patients = new Array();
+	var d=document.querySelector('paper-dialog');
+	//patients.push(["Name", "MRN", "DOB", "Primary Complaint", "Attending Physician"]);
+	patients.push({"name":"Akshar Rawal", "MRN":"141542","dob": "02/14/1991","primary":"Headache","physician":"Dr. Braunstein"});
+	patients.push({"name":"Ben Nguyen",  "MRN":"142324", "dob":"05/31/1991","primary":"Stomachache","physician":"Dr. Braunstein"});
+	patients.push({"name":"Carl Saldanha", "MRN":"153234", "dob":"12/06/1991","primary":"Sprain","physician":"Dr. Braunstein"});
+	patients.push({"name":"Erik Reinerstein","MRN":"153466","dob": "01/24/1991","primary":"Burn","physician":"Dr. Braunstein"});
+	patients.push({"name":"Vu Nguyen","MRN":"153466", "dob":"08/10/1991","primary":"Bite","physician":"Dr. Braunstein"});
+	console.log(patients);
 
- 	$scope.opensearch=function(){
-		$scope.search=false;
-	}
+	$scope.patients=patients;
 
 	$scope.populatePatients = function () {
 		var patients = new Array();
-		patients.push(["Name", "MRN", "DOB", "Primary Complaint", "Attending Physician"]);
-	    patients.push(["Akshar Rawal", "141542", "02/14/1991", "Headache", "Dr. Braunstein"]);
-	    patients.push(["Ben Nguyen", "142324", "05/31/1991", "Stomachache", "Dr. Braunstein"]);
-	    patients.push(["Carl Saldanha", "153234", "12/06/1991", "Sprain", "Dr. Braunstein"]);
-	    patients.push(["Erik Reinerstein", "153466", "01/24/1991", "Burn", "Dr. Braunstein"]);
-	    patients.push(["Vu Nguyen", "153466", "08/10/1991", "Bite", "Dr. Braunstein"]);
-		    
+		//patients.push(["Name", "MRN", "DOB", "Primary Complaint", "Attending Physician"]);
+	    patients.push({"name":"Akshar Rawal", "MRN":"141542","dob": "02/14/1991","primary":"Headache","physician":"Dr. Braunstein"});
+	    patients.push({"name":"Ben Nguyen",  "MRN":"142324", "dob":"05/31/1991","primary":"Stomachache","physician":"Dr. Braunstein"});
+	    patients.push({"name":"Carl Saldanha", "MRN":"153234", "dob":"12/06/1991","primary":"Sprain","physician":"Dr. Braunstein"});
+	    patients.push({"name":"Erik Reinerstein","MRN":"153466","dob": "01/24/1991","primary":"Burn","physician":"Dr. Braunstein"});
+	    patients.push({"name":"Vu Nguyen","MRN":"153466", "dob":"08/10/1991","primary":"Bite","physician":"Dr. Braunstein"});
+		  
+		$scope.patients=patients;
+		/*
 	    //Create a HTML Table element.
 	    var table = document.createElement("TABLE");
     	//table.border = "1";
@@ -73,13 +79,25 @@ app.controller('PatientController',  function($scope) {
 	    //Get patient table to populate data
 	    var pTable = document.getElementById("patientTable");
 	    pTable.innerHTML = "";	    
-      	pTable.appendChild(table);
+      	pTable.appendChild(table);*/
 	}
 
-	$scope.patientDetails = function () {
-		var url = window.location;
-		var detailsPane = document.getElementById("details");
-		detailsPane.innerHTML = (url.search.split('MRN=')[1] ? url.search.split('MRN=')[1] : "No record found.");
+	$scope.patientDetails = function (mrn) {
+		console.log(mrn);
+		//var url = window.location;
+		//var detailsPane = document.getElementById("details");
+		//detailsPane.innerHTML = (url.search.split('MRN=')[1] ? url.search.split('MRN=')[1] : "No record found.");
+		d.toggle();
+		console.log(d);
+		if(d.style.display != 'none'){			
+			window.open("patientPage.html");			
+		
+		}
+
+	}
+
+	$scope.closePatientView=function(){
+		d.toggle();
 	}
 
 	return {
