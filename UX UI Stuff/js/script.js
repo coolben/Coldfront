@@ -1,4 +1,4 @@
-var app=angular.module("coldfront",[])
+var app=angular.module("coldfront",['ng-polymer-elements'])
 .config( [
     '$compileProvider',
     function( $compileProvider )
@@ -24,27 +24,41 @@ app.controller('ToolbarController',  function($scope) {
 
 app.controller('PatientController',  function($scope) {
 	var patients = new Array();
+	var currentPatient=-1;
+	var filterArray=["7 South", "8 North", "Recent", "All"];
 	var d=document.querySelector('paper-dialog');
-	//patients.push(["Name", "MRN", "DOB", "Primary Complaint", "Attending Physician"]);
-	patients.push({"name":"Akshar Rawal", "MRN":"141542","dob": "02/14/1991","primary":"Headache","physician":"Dr. Braunstein"});
-	patients.push({"name":"Ben Nguyen",  "MRN":"142324", "dob":"05/31/1991","primary":"Stomachache","physician":"Dr. Braunstein"});
-	patients.push({"name":"Carl Saldanha", "MRN":"153234", "dob":"12/06/1991","primary":"Sprain","physician":"Dr. Braunstein"});
-	patients.push({"name":"Erik Reinerstein","MRN":"153466","dob": "01/24/1991","primary":"Burn","physician":"Dr. Braunstein"});
-	patients.push({"name":"Vu Nguyen","MRN":"153466", "dob":"08/10/1991","primary":"Bite","physician":"Dr. Braunstein"});
-	console.log(patients);
 
+	patients.push({"id":0,"from":"7 South","name":"Akshar Rawal", "MRN":"141542","dob": "02/14/1991","primary":"Headache","physician":"Dr. Braunstein"});
+	patients.push({"id":1,"from":"7 South","name":"Ben Nguyen",  "MRN":"142324", "dob":"05/31/1991","primary":"Stomachache","physician":"Dr. Braunstein"});
+	patients.push({"id":2,"from":"8 North","name":"Carl Saldanha", "MRN":"153234", "dob":"12/06/1991","primary":"Sprain","physician":"Dr. Braunstein"});
+	patients.push({"id":3,"from":"8 North","name":"Erik Reinerstein","MRN":"153466","dob": "01/24/1991","primary":"Burn","physician":"Dr. Braunstein"});
+	patients.push({"id":4,"from":"7 South","name":"Vu Nguyen","MRN":"153466", "dob":"08/10/1991","primary":"Bite","physician":"Dr. Braunstein"});
+
+	//set up scope variables
+	$scope.filter=3;
 	$scope.patients=patients;
-
+	console.log($scope.filter);
+	$scope.handleFilter=function(){
+		$scope.filter=data;
+		console.log($scope.filter);
+	}
 	$scope.populatePatients = function () {
-		var patients = new Array();
-		//patients.push(["Name", "MRN", "DOB", "Primary Complaint", "Attending Physician"]);
-	    patients.push({"name":"Akshar Rawal", "MRN":"141542","dob": "02/14/1991","primary":"Headache","physician":"Dr. Braunstein"});
-	    patients.push({"name":"Ben Nguyen",  "MRN":"142324", "dob":"05/31/1991","primary":"Stomachache","physician":"Dr. Braunstein"});
-	    patients.push({"name":"Carl Saldanha", "MRN":"153234", "dob":"12/06/1991","primary":"Sprain","physician":"Dr. Braunstein"});
-	    patients.push({"name":"Erik Reinerstein","MRN":"153466","dob": "01/24/1991","primary":"Burn","physician":"Dr. Braunstein"});
-	    patients.push({"name":"Vu Nguyen","MRN":"153466", "dob":"08/10/1991","primary":"Bite","physician":"Dr. Braunstein"});
-		  
-		$scope.patients=patients;
+		var populate=new Array();
+		switch(filterArray[$scope.filter]){
+			case 'All':
+						populate=patients;
+						break;
+			case 'Recent':
+						//correct logic to be added later
+						populate=patients;
+						break;						
+			default:
+						for(var i=0;i<patients.length;i++)
+							if(patients[i]['from']==filterArray[$scope.filter])
+								populate.push(patients[i]);
+						break;
+		}
+		$scope.patients=populate;
 		/*
 	    //Create a HTML Table element.
 	    var table = document.createElement("TABLE");
@@ -82,22 +96,26 @@ app.controller('PatientController',  function($scope) {
       	pTable.appendChild(table);*/
 	}
 
-	$scope.patientDetails = function (mrn) {
-		console.log(mrn);
-		//var url = window.location;
-		//var detailsPane = document.getElementById("details");
-		//detailsPane.innerHTML = (url.search.split('MRN=')[1] ? url.search.split('MRN=')[1] : "No record found.");
-		d.toggle();
-		console.log(d);
+	$scope.patientDetails = function (i) {
+		$scope.mrn=patients[i].MRN;
+		$scope.dob=patients[i].dob;
+		$scope.primary=patients[i].primary;
+		$scope.physician=patients[i].physician;
 		if(d.style.display != 'none'){			
-			window.open("patientPage.html");			
-		
+			if(currentPatient==i){
+				window.open("patientPage.html?mrn="+mrn);			
+				d.toggle();
+			}
 		}
+		else
+			d.toggle();
+		currentPatient=i;
 
 	}
 
 	$scope.closePatientView=function(){
 		d.toggle();
+		currentPatient=-1;
 	}
 
 	return {

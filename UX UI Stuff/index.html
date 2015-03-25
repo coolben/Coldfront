@@ -10,7 +10,8 @@
   <!--Angular-->
   <script src="bower_components/angular/angular.js" charset="utf-8"></script>
   <script src="bower_components/angular-route/angular-route.js"></script>
-
+	
+	<script src="bower_components/ng-polymer-elements/ng-polymer-elements.min.js"></script>
   <script src="./js/script.js" charset="utf-8"></script>
 
   <!--Polymer-->
@@ -111,54 +112,58 @@ ul{
 			<div>
 				<paper-shadow z="2">
 					<div horizontal layout flex class="header-1">
-			 			My Patients / 8 south
+			 			My Patients / 					
+			 			<paper-dropdown-menu style='color:#000;padding:0px;margin:0px;width:80px'>
+				    <paper-dropdown class="dropdown" >
+				        <core-menu class="menu" ng-model="filter" bind-polymer valueattr="value" style='text-align:center' ng-change="handleFilter()">
+			            <paper-item value=0>7 South</paper-item>
+			            <paper-item value=1>8 North</paper-item>
+			            <paper-item value=2>Recent</paper-item>
+			            <paper-item value=3>All</paper-item>
+			  	      </core-menu>
+				    </paper-dropdown>
+					</paper-dropdown-menu>
 			 			<paper-icon-button  id="refreshButton" icon="refresh" text="Refresh" ng-click="populatePatients()" style='margin:0px;padding:0px'></paper-icon-button>
 					</div>
 				</paper-shadow>
 				</div>	
-				<div flex main >
-					<paper-dropdown-menu label="Filter Patients" style='float:right;width:130px'>
-				    <paper-dropdown class="dropdown" >
-				        <core-menu class="menu">
-			            <paper-item>7 South</paper-item>
-			            <paper-item>8 North</paper-item>
-			            <paper-item>Recent</paper-item>
-			            <paper-item>All</paper-item>
-			  	      </core-menu>
-				    </paper-dropdown>
-					</paper-dropdown-menu>
-
-							<paper-dialog id="dialog" heading="Patient View"	>
-							  <p>This app would like to launch a small, unmanned vehicle
-							     into space.</p>
-							  <paper-button affirmative default autofocus style='background-color:#03A9F4;color:#222' ng-click="closePatientView()">Done</paper-button>
-							</paper-dialog>															
-
-					<div class='large-10 columns large-offset-1 medium-10 medium-offset-1 small-12'>
-						<paper-shadow z="2">
-							<table class='small-12'>
-								<thead>
-									<tr>
-										<th>Name</th>
-										<th>MRN</th>
-										<th>DOB</th>
-										<th>Primary Complaint</th>
-										<th>Attending Physician</th>
-									</tr>
-								</thead>
-								<tbody>
-									<tr ng-repeat="patient in patients">
-										<td><a href="#" ng-click="patientDetails(patient.MRN)">{{patient.name}}</a></td>
-										<td>{{patient.MRN}}</td>
-										<td>{{patient.dob}}</td>
-										<td>{{patient.primary}}</td>
-										<td>{{patient.physician}}</td>
-									</tr>
-								</tbody>
-							</table>
-						</paper-shadow>
-					</div>
-	  		</div>
+				<div  class="row" style="margin-top:20px" >
+				<div class='large-10  large-offset-1 medium-10 medium-offset-1 small-12'>
+					<paper-dialog id="dialog" heading="Patient View">
+					  <p>This app would like to launch a small, unmanned vehicle into space.</p>
+						<hr />
+						<p> MRN: {{mrn}}</p>
+						<p> DOB: {{dob}}</p>
+						<p> Cheif Complaint: {{primary}}</p>
+						<p> Physician: {{physician}}</p>
+					  <paper-button affirmative default autofocus style='background-color:#03A9F4;color:#222' ng-click="closePatientView()">Done</paper-button>
+					  <paper-button affirmative default autofocus style='background-color:#03A9F4;color:#222' >
+					  <a href="patientPage.html?mrn={{mrn}}" target="_blank">Open in New Tab</a></paper-button>
+					</paper-dialog>						
+					<paper-shadow z="2">
+						<table class='small-12'>
+							<thead>
+								<tr>
+									<th>Name</th>
+									<th>MRN</th>
+									<th>DOB</th>
+									<th>Primary Complaint</th>
+									<th>Attending Physician</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr ng-repeat="patient in patients">
+									<td><a href="#" ng-click="patientDetails($index)">{{patient.name}}</a></td>
+									<td>{{patient.MRN}}</td>
+									<td>{{patient.dob}}</td>
+									<td>{{patient.primary}}</td>
+									<td>{{patient.physician}}</td>
+								</tr>
+							</tbody>
+						</table>
+					</paper-shadow>
+				</div>
+  		</div>
 	  	</div>
 	  </div>
 	  <div>
@@ -189,7 +194,6 @@ tabs.selected=0;
 tabs.addEventListener('core-select',function(){
   pages.selected = tabs.selected;
 });
-document.querySelector('paper-dialog').toggle();
 
 </script>
 
