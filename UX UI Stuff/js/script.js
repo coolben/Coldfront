@@ -103,7 +103,7 @@ app.controller('PatientController',  function($scope) {
 		$scope.physician=patients[i].physician;
 		if(d.style.display != 'none'){			
 			if(currentPatient==i){
-				window.open("patientPage.html?mrn="+mrn);			
+				window.open("patientPage.html?mrn="+$scope.mrn);			
 				d.toggle();
 			}
 		}

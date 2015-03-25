@@ -10,6 +10,8 @@
   <!--Angular-->
   <script src="bower_components/angular/angular.js" charset="utf-8"></script>
   <script src="bower_components/angular-route/angular-route.js"></script>
+	<script src="bower_components/ng-polymer-elements/ng-polymer-elements.min.js"></script>
+
 
   <script src="./js/script.js" charset="utf-8"></script>
   <script type="text/javascript">
@@ -181,7 +183,6 @@ tabs.selected=0;
 tabs.addEventListener('core-select',function(){
   pages.selected = tabs.selected;
 });
-document.querySelector('paper-dialog').toggle();
 </script>
 
 </html>
