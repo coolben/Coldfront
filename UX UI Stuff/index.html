@@ -47,7 +47,8 @@ core-header-panel {
   background: white;
 }
 core-toolbar {
-  background-color: #03A9F4;
+  background-color: #0277BD;
+  color:#fff;
 }
 #navheader {
   background-color: #56BA89;
@@ -90,7 +91,7 @@ ul{
 } 
 </style>
 </head>
-<body fullbleed vertical layout unresolved ng-app="coldfront">
+<body fullbleed vertical ng-app="coldfront">
 <core-toolbar class='medium-tall' ng-controller='ToolbarController'>
 
   <paper-icon-button id="navicon" icon="menu"></paper-icon-button>
@@ -109,10 +110,10 @@ ul{
   </core-toolbar>
   <core-pages selected="0" fancy>
   	<div ng-controller="PatientController">
-		<div vertical layout style="background:#4DD0E1;min-height:570px">
+		<div vertical layout style="background:#EEEEEE;min-height:570px">
 			<div>
 				<paper-shadow z="2">
-					<div horizontal layout flex class="header-1" style="background:#B2EBF2">
+					<div horizontal layout flex class="header-1" style="background:#E0E0E0">
 			 			My Patients / 					
 			 			<paper-dropdown-menu style='color:#000;padding:0px;margin:0px;width:80px'>
 				    <paper-dropdown class="dropdown" >
