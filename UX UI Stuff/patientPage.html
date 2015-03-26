@@ -91,9 +91,7 @@ ul{
 }
 
 .card{
-  margin: 20px;
-  padding: 10px;
-}
+ }
 
 .datetext{
 	font-style: italic;
@@ -101,17 +99,19 @@ ul{
 }
 </style>
 </head>
-<body fullbleed vertical layout unresolved ng-app="coldfront">
-  <div id="details">
+<body vertical ng-app="coldfront">
+  <div id="details" class="small-12 columns">
 	  <div class='row' ng-controller='PatientDetailsController'>
-			<paper-shadow class='card large-4 medium-6 small-12 columns' z="1">
+	  <h2>Patient Chart: {{patientDetails.firstName}} {{patientDetails.lastName}} </h2>
+	  <div class ='small-12 columns' style="margin-top:50px">
+			<paper-shadow class='card large-4  medium-6 small-12 columns' z="1">
 				<img src="img/female.png" style="width:50px;height:auto" /><h4 style="display:inline"> {{patientDetails.firstName}} {{patientDetails.lastName}}</h4>
 				<br />
 				<span>Address: {{patientDetails.address}}</span><br/>
 				<span>Email:   {{patientDetails.email}}</span><br/>
 				<span>Phone:   {{patientDetails.phone}}  </span>
 			</paper-shadow>
-			<paper-shadow class='card large-7 medium-5 small-12 columns' z='1'>
+			<paper-shadow class='card large-7 medium-6 small-12 columns' z='1' style='margin-bottom:100px;'>
 				<h4>Pending Action Items:</h4>
 				<ul>
 					<li>Give the patient medicine</li>
@@ -119,8 +119,9 @@ ul{
 				</ul>
 			</paper-shadow>
 		</div>
+		</div>
 		<div class='row' ng-controller='OtherController'>
-		<div class='large-10 large-offset-1 medium-10 medium-offset-1 small-12 columns'>
+		<div class='large-12  small-12 columns card'>
 	    <paper-shadow  z='1'>
             <paper-tabs selected="{{selected}}">
                 <paper-tab>Notes</paper-tab>
@@ -132,25 +133,37 @@ ul{
         <core-pages selected="{{selected}}" bind-polymer>
             <div>
 						<paper-shadow class='' z='1' style='min-height:20px'>
-                <ul ng-repeat="note in notes">
-                    <li>{{note.text}}</li>
-                    <li>
-                        <div class='datetext'>{{note.createdBy}}, {{note.created}}</div></li>
-                </ul>
+                <div ng-repeat="note in notes">
+                		<b>{{note.title}}</b><br />
+                		{{note.text}}
+                        <div class='datetext'>By {{note.createdBy}}, {{note.created}}</div>
+                </div>
 						</paper-shadow>
             </div>
             <div>
     	        <paper-shadow class='' z='1' style='min-height:20px'>
-                <ul ng-repeat="lab in labs">
-                    <li>{{lab.text}}</li>
-                    <li>
-                        <div class='datetext'>{{lab.created}}</div></li>
-                </ul>
+    	        	
+    	        	<table ng-repeat="lab in labs"> 
+    	        	<b>{{lab.text}} - {{lab.created}}</b>
+    	        		<tr>
+    	        			<th>Component</th>
+    	        			<th>Your Value</th>
+    	        			<th>Range </th>
+    	        			<th>Units</th>
+    	        		</tr>
+    	        		<tr  ng-repeat="value in lab.values">
+    	        			<td>{{value.name}}</td>
+    	        			<td>{{value.val}}</td>
+    	        			<td>{{value.range}}</td>
+    	        			<td>{{value.units}}</td>
+    	        		</tr>
+    	        	</table>
               </paper-shadow>
             </div>
             <div>
         			<paper-shadow class='' z='1' style='min-height:20px'>
 								<ul ng-repeat="order in orders">
+
                     <li>{{order.text}}</li>	
                     <li>Ordered: {{order.orderedBy}}, {{order.ordered}}</li>
                     <li>Completed: {{order.completedBy}}, {{order.completedOn}}</li>

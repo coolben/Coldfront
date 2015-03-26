@@ -133,12 +133,16 @@ app.controller('PatientDetailsController',function($scope){
                                 "phone": "(302) 303 3030"};
 });
 
+app.controller('TaskController',function($scope){
+
+});
+
 app.controller('OtherController',function($scope){
 	$scope.selected=1;
     // TODO: use FHIR or our backend to populate scope variables
-    $scope.notes = [{"text": "Note 1", "created": "3/5/2015", "createdBy": "Dr. Evil"},
-                    {"text": "Note 2", "created": "3/6/2015", "createdBy": "Vu Nguyen"}];
+    $scope.notes = [{"title":"Update Note","text": "Elaine R. states recent difficulties with sleeping and concentration due to current problem. Cl. states getting only a few hours of sleep each night and complains that “I wake up in the middle of the night thinking about this stuff.” Cl. states change in mood becoming increasingly depressed, tearful at times. Cl. describes no change in eating. Cl. denies any increase/decrease in alcohol/drug use. Cl. states symptoms have lasted at least two months and are getting worse. Cl. denies any current medical concerns but states use of medication to decrease blood pressure. States last physical exam was 6 months ago. Cl. still able to perform duties/responsibilities as required. Cl. has been using social supports, exercise to deal with current stressors.Files", "created": "3/5/2015", "createdBy": "Dr. Evil"},
+                    {"title":"Complete Evaluation","text": "History: Anna is a divorced Canadian 59 year old woman. Her chief complaint is, “I am constantly on edge and can't seem to concentrate on even the easiest tasks.\" Anna describes generalized anxiety and worry about events and activities. The source of the anxiety varies but the anxiety is present most days and she finds it difficult to control the worry. These generalized anxiety symptoms have been present for months. Her symptoms include: Sleep Disturbance Excess muscle tension Irritability Difficulty concentrating or mind going blank Being easily fatigued", "created": "3/6/2015", "createdBy": "Vu Nguyen"}];
     $scope.orders = [{"text": "Order 1", "ordered": "3/5/2015", "orderedBy": "Dr. Love", "completed": "", "completedBy": "Uncle Ben", "completedOn": "3/5/2015"}];
 
-    $scope.labs = [{"text": "lab 1", "result": "result text", "created": "3/5/2015"}];
+    $scope.labs = [{"text": "lab 1", "result": "result text", "created": "3/5/2015","values":[{"name":"WBC Count","val":"6.7","range":"4.5-11.0","units":"K/UL"},{"name":"RBC Count","val":"5.7","range":"3.5-5.50","units":"MIL/UL"}]}];
 });
