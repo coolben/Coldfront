@@ -126,10 +126,10 @@ app.controller('PatientController',  function($scope) {
 app.controller('PatientDetailsController',function($scope){
 
     //Use FHIR.js or another js package to load data
-    $scope.patientDetails = {"firstName": "Marla",
-                                "lastName": "Dixon",
+    $scope.patientDetails = {"firstName": "Akshar",
+                                "lastName": "Rawal",
                                 "address": "302, 10th St., Atlanta",
-                                "email": "marla@iamsick.com",
+                                "email": "akshar@iamsick.com",
                                 "phone": "(302) 303 3030"};
 });
 
