@@ -124,6 +124,7 @@ app.controller('PatientController',  function($scope) {
  });
 
 app.controller('PatientDetailsController',function($scope){
+
     //Use FHIR.js or another js package to load data
     $scope.patientDetails = {"firstName": "Marla",
                                 "lastName": "Dixon",
@@ -133,6 +134,7 @@ app.controller('PatientDetailsController',function($scope){
 });
 
 app.controller('OtherController',function($scope){
+	$scope.selected=1;
     // TODO: use FHIR or our backend to populate scope variables
     $scope.notes = [{"text": "Note 1", "created": "3/5/2015", "createdBy": "Dr. Evil"},
                     {"text": "Note 2", "created": "3/6/2015", "createdBy": "Vu Nguyen"}];
