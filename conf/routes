@@ -16,5 +16,7 @@ GET     /patient/:patientId/conditions      controllers.Application.getCondition
 GET     /patient/:patientId/medications     controllers.Application.getMedications(patientId: Long)
 GET     /patient/:patientId/observations    controllers.Application.getObservations(patientId: Long)
 
+GET     /trial						views.main
+
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.at(path="/public", file)

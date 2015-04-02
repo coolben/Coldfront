@@ -1,0 +1,193 @@
+<html>
+<!--<script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>-->
+
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Coldfront</title>
+  <link rel="stylesheet" href="css/foundation.css" />
+  <script src="js/vendor/modernizr.js"></script>
+
+  <!--Angular-->
+  <script src="@routes.Assets.at("public/bower_components/angular", "angular.js")" charset="utf-8"></script>
+  <script src="@routes.Assets.at("public/bower_components/angular-route", "angular-route.js")"></script>
+	<script src="@routes.Assets.at("public/bower_components/ng-polymer-elements", "ng-polymer-elements.min.js")"></script>
+
+
+  <script src="./js/script.js" charset="utf-8"></script>
+  <script type="text/javascript">
+    window.onload = function () {
+	    var url = window.location;
+		var detailsPane = document.getElementById("details");
+	//	detailsPane.innerHTML = "Patient MRN is " + (url.search.split('MRN=')[1] ? url.search.split('MRN=')[1] : "No record found.");
+	}
+  </script>
+
+  <!--Polymer-->
+  <script src="@routes.Assets.at("public/bower_components/webcomponentsjs", "webcomponents.js")"></script>
+  <link rel="import" href="@routes.Assets.at("public/bower_components/core-toolbar", "core-toolbar.html")">
+  <link rel="import" href="@routes.Assets.at("public/bower_components/core-menu", "core-menu.html")">
+  <link rel="import" href="@routes.Assets.at("public/bower_components/core-item", "core-item.html")">
+  <link rel="import" href="@routes.Assets.at("public/bower_components/core-pages", "core-pages.html")">
+  <link rel="import" href="@routes.Assets.at("public/bower_components/core-overlay/core-overlay.html")">
+  <link rel="import" href="@routes.Assets.at("public/bower_components/core-header-panel", "core-header-panel.html")">
+  <link rel="import" href="@routes.Assets.at("public/bower_components/core-drawer-panel", "core-drawer-panel.html")">
+  <link rel="import" href="@routes.Assets.at("public/bower_components/core-icons", "core-icons.html")">
+	<link rel="import" href="@routes.Assets.at("public/bower_components/core-scaffold", "core-scaffold.html")">
+  <link rel="import" href="@routes.Assets.at("public/bower_components/paper-input", "paper-input.html")">
+  <link rel="import" href="@routes.Assets.at("public/bower_components/paper-icon-button", "paper-icon-button.html")">
+  <link rel="import" href="@routes.Assets.at("public/bower_components/paper-tabs", "paper-tabs.html")">
+  <link rel="import" href="@routes.Assets.at("public/bower_components/paper-shadow", "paper-shadow.html")">
+  <link rel="import" href="@routes.Assets.at("public/bower_components/font-roboto", "roboto.html")">  
+  <link rel="import" href="@routes.Assets.at("public/bower_components/core-collapse", "core-collapse.html")">
+  <link rel="import" href="@routes.Assets.at("public/bower_components/core-menu", "core-menu.html")">
+  <link rel="import" href="@routes.Assets.at("public/bower_components/paper-dropdown", "paper-dropdown.html")">
+  <link rel="import" href="@routes.Assets.at("public/bower_components/paper-item", "paper-item.html")">
+  <link rel="import" href="@routes.Assets.at("public/bower_components/paper-dropdown-menu", "paper-dropdown-menu.html")">  
+  <link rel="import" href="@routes.Assets.at("public/bower_components/paper-dialog", "paper-dialog.html")">  
+  <link rel="import" href="@routes.Assets.at("public/bower_components/paper-dialog", "paper-dialog-base.html")">  
+<style>
+body {
+  font-family: sans-serif;
+}
+core-header-panel {
+  background: white;
+}
+core-toolbar {
+  background-color: #03A9F4;
+}
+#navheader {
+  background-color: #56BA89;
+}
+.content {
+  background-color:#dddddd;
+}
+/* drawer is always visible on a wide screen
+   so menu button isn't required */
+core-drawer-panel:not([narrow]) #navicon {
+  display: none;
+}
+
+.header-1{
+	background:#e66;
+	padding: 20px;
+}
+
+div[drawer]{
+	background: #2196F3;
+	min-width: 300px
+}
+
+div[main]{
+	padding-left:20px;
+	padding-right:20px;
+}
+
+ul{
+	margin-bottom: 0
+}
+
+.patient-sidebar{
+	float:right;min-height:500px;background:#E91E63;width:300px;z-index:5;float:right
+}
+
+.card{
+ }
+
+.datetext{
+	font-style: italic;
+
+}
+</style>
+</head>
+<body vertical ng-app="coldfront">
+  <div id="details" class="small-12 columns">
+	  <div class='row' ng-controller='PatientDetailsController'>
+	  <h2>Patient Chart: {{patientDetails.firstName}} {{patientDetails.lastName}} </h2>
+	  <div class ='small-12 columns' style="margin-top:50px">
+			<paper-shadow class='card large-4  medium-6 small-12 columns' z="1">
+				<img src="img/female.png" style="width:50px;height:auto" /><h4 style="display:inline"> {{patientDetails.firstName}} {{patientDetails.lastName}}</h4>
+				<br />
+				<span>Address: {{patientDetails.address}}</span><br/>
+				<span>Email:   {{patientDetails.email}}</span><br/>
+				<span>Phone:   {{patientDetails.phone}}  </span>
+			</paper-shadow>
+			<paper-shadow class='card large-7 medium-6 small-12 columns' z='1' style='margin-bottom:100px;'>
+				<h4>Pending Action Items:</h4>
+				<ul>
+					<li>Give the patient medicine</li>
+					<li>Heal him</li>
+				</ul>
+			</paper-shadow>
+		</div>
+		</div>
+		<div class='row' ng-controller='OtherController'>
+		<div class='large-12  small-12 columns card'>
+	    <paper-shadow  z='1'>
+            <paper-tabs selected="{{selected}}">
+                <paper-tab>Notes</paper-tab>
+                <paper-tab>Labs</paper-tab>
+                <paper-tab>Orders</paper-tab>
+            </paper-tabs>
+			</paper-shadow>
+			
+        <core-pages selected="{{selected}}" bind-polymer>
+            <div>
+						<paper-shadow class='' z='1' style='min-height:20px'>
+                <div ng-repeat="note in notes">
+                		<b>{{note.title}}</b><br />
+                		{{note.text}}
+                        <div class='datetext'>By {{note.createdBy}}, {{note.created}}</div>
+                </div>
+						</paper-shadow>
+            </div>
+            <div>
+    	        <paper-shadow class='' z='1' style='min-height:20px'>
+    	        	
+    	        	<table ng-repeat="lab in labs"> 
+    	        	<b>{{lab.text}} - {{lab.created}}</b>
+    	        		<tr>
+    	        			<th>Component</th>
+    	        			<th>Your Value</th>
+    	        			<th>Range </th>
+    	        			<th>Units</th>
+    	        		</tr>
+    	        		<tr  ng-repeat="value in lab.values">
+    	        			<td>{{value.name}}</td>
+    	        			<td>{{value.val}}</td>
+    	        			<td>{{value.range}}</td>
+    	        			<td>{{value.units}}</td>
+    	        		</tr>
+    	        	</table>
+              </paper-shadow>
+            </div>
+            <div>
+        			<paper-shadow class='' z='1' style='min-height:20px'>
+								<ul ng-repeat="order in orders">
+
+                    <li>{{order.text}}</li>	
+                    <li>Ordered: {{order.orderedBy}}, {{order.ordered}}</li>
+                    <li>Completed: {{order.completedBy}}, {{order.completedOn}}</li>
+                </ul>
+              </paper-shadow>
+            </div>
+        </core-pages>
+	    
+	    </div>
+	  </div>
+  </div>
+
+</body>
+
+
+<script type="text/javascript">
+
+var tabs = document.querySelector('paper-tabs');
+var pages = document.querySelector('core-pages');
+pages.selected = 0; 
+tabs.selected=0;
+tabs.addEventListener('core-select',function(){
+  pages.selected = tabs.selected;
+});
+</script>
+
+</html>
