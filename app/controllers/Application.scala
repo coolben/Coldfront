@@ -59,4 +59,8 @@ object Application extends Controller {
     }
   }
 
+  def getPatientView = Action {
+    Ok(views.html.patientView())
+  }
+
 }
