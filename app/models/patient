@@ -1,9 +1,0 @@
-package models
-
-import play.api.libs.json.Json
-
-object Patient {
-    case class Patient(nameFirst: string, nameLast: string, age: integer)
-    
-    
-}
