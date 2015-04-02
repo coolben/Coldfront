@@ -228,64 +228,46 @@ ul{
 	  					<paper-shadow  z='1' class='header-1 small-12 ' style='margin-bottom:10px;background:#B2EBF2'>
 	  						<div class=''>To Do</div>
 	  					</paper-shadow>
+	  					<div ng-repeat="todo in todos">
 	  					<div class='row' style="width:100%">
 							<paper-shadow  z='1' class='card small-10 small-offset-1 columns' style='min-height:100px;margin-bottom:40px;padding:10px;background:#fff'>
-								Replace Mr Foley's cathater<br/>
+								{{todo}}<br/>
 								<div style='position:absolute;bottom:5px;font-size:0.8em'>
-									<a herf="#">Mark as Doing</a> | <a herf="#">Mark as Done</a>
+									<a herf="#" ng-click="moveFromTodoToDoing($index)">Mark as Doing</a> | <a herf="#" ng-click="moveFromTodoToDone($index)">Mark as Done</a>
 								</div>
 							</paper-shadow>
 							</div>
-							<div class='row' style="width:100%">
-							<paper-shadow  z='1' class='card small-10 small-offset-1 columns' style='min-height:100px;margin-bottom:40px;padding:10px;background:#fff'>
-								Cure the patients<br />
-								<div style='position:absolute;bottom:5px;font-size:0.8em'>
-									<a herf="#">Mark as Doing</a> | <a herf="#">Mark as Done</a>
-								</div>
-							</paper-shadow>		
 							</div>
-							<div class='row' style="width:100%">
-							<paper-shadow  z='1' class='card small-10 small-offset-1 columns' style='min-height:100px;margin-bottom:40px;padding:10px;background:#fff'>
-								Meet my supervisor<br/>
-								<div style='position:absolute;bottom:5px;font-size:0.8em'>
-									<a herf="#">Mark as Doing</a> | <a herf="#">Mark as Done</a>
-								</div>
-							</paper-shadow>											
-							</div>	
 	  				</div>
 	  				<div class='large-3 columns' style="background:#80DEEA;min-height:600px;padding:0px">
 	  				<paper-shadow  z='1' class='header-1 small-12 ' style='margin-bottom:10px;background:#80DEEA'>
 	  					<div class=''>In Progress</div>
 	  					</paper-shadow>	  				
-	  					<div class='row'>
+	  					<div ng-repeat="doing in doings">
+							<div class='row' style="width:100%">
 							<paper-shadow  z='1' class='card small-10 small-offset-1 columns' style='min-height:100px;margin-bottom:40px;padding:10px;background:#fff'>
-								Check respirator labs<br/>
+								{{doing}}<br />
 								<div style='position:absolute;bottom:5px;font-size:0.8em'>
-									<a herf="#">Mark as To Do</a> | <a herf="#">Mark as Done</a>
+									<a herf="#"  ng-click="moveFromDoingToTodo($index)">Mark as To Do</a> | <a herf="#" ng-click="moveFromDoingToDone($index)">Mark as Done</a>
 								</div>
-							</paper-shadow>
+							</paper-shadow>		
 							</div>
-							<div class='row'>	
-							<paper-shadow  z='1' class='card small-10 small-offset-1 columns' style='min-height:100px;margin-bottom:40px;padding:10px;background:#fff'>
-								Check crocin order<br/>
-								<div style='position:absolute;bottom:5px;font-size:0.8em'>
-									<a herf="#">Mark as To Do</a> | <a herf="#">Mark as Done</a>
-								</div>
-							</paper-shadow>	
 							</div>
 	  				</div>
 	  				<div class='large-3 columns' style="background:#4DD0E1;min-height:600px;padding:0px">
 							<paper-shadow  z='1' class='header-1 small-12 ' style='margin-bottom:10px;background:#4DD0E1'>
 	  					<div class=''>Done</div>
 	  					</paper-shadow>	  				
-	  					<div class='row'>
+	  					<div ng-repeat="done in dones">
+							<div class='row' style="width:100%">
 							<paper-shadow  z='1' class='card small-10 small-offset-1 columns' style='min-height:100px;margin-bottom:40px;padding:10px;background:#fff'>
-								Meet my friends<br/>
+								{{done}}<br />
 								<div style='position:absolute;bottom:5px;font-size:0.8em'>
-									<a herf="#">Delete from List</a>
+									<a herf="#" ng-click='removeFromDone($index)'>Remove from List</a>
 								</div>
-							</paper-shadow>	
-							</div>	  					
+							</paper-shadow>		
+							</div>
+							</div>
 	  				</div>
 	  </div>
 	 </core-pages>
@@ -304,5 +286,6 @@ tabs.addEventListener('core-select',function(){
 });
 
 </script>
+
 
 </html>

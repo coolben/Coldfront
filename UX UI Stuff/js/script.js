@@ -22,7 +22,7 @@ app.controller('ToolbarController',  function($scope) {
  });
 
 
-app.controller('PatientController',  function($scope) {
+app.controller('PatientController',  function($scope,$http) {
 	var patients = new Array();
 	var currentPatient=-1;
 	var filterArray=["7 South", "8 North", "Recent", "All"];
@@ -34,13 +34,25 @@ app.controller('PatientController',  function($scope) {
 	patients.push({"id":3,"from":"8 North","name":"Erik Reinerstein","MRN":"153466","dob": "01/24/1991","primary":"Burn","physician":"Dr. Braunstein"});
 	patients.push({"id":4,"from":"7 South","name":"Vu Nguyen","MRN":"153466", "dob":"08/10/1991","primary":"Bite","physician":"Dr. Braunstein"});
 
+    var responsePromise = $http({
+      method: 'GET',
+      url: "https://taurus.i3l.gatech.edu:8443/HealthPort/fhir/Patient?format=json",
+      headers: {'Content-Type':  "application/x-www-form-urlencoded; charset=utf-8"}
+    });
+
+    responsePromise.success(function(data, status, headers, config)  {
+      console.log(data);
+    });
+    responsePromise.error(function(data, status, headers, config) {
+      alert("AJAX failed!");
+    });
+
 	//set up scope variables
 	$scope.filter=3;
 	$scope.patients=patients;
 	console.log($scope.filter);
 	$scope.handleFilter=function(){
 		$scope.filter=data;
-		console.log($scope.filter);
 	}
 	$scope.populatePatients = function () {
 		var populate=new Array();
@@ -135,6 +147,28 @@ app.controller('PatientDetailsController',function($scope){
 
 app.controller('TaskController',function($scope){
 
+	$scope.todos=["Replace Mr Foley's cathater","Cure the Patients"];
+	$scope.doings=["Check respirator labs","Check crocin order"];
+	$scope.dones=["Meet My Friends"];
+	$scope.removeFromDone=function(id){
+		    $scope.dones.splice(id, 1);
+	}
+	$scope.moveFromDoingToDone=function(id){
+		    var x=$scope.doings.splice(id, 1);
+		    $scope.dones.push(x[0]);
+	}	
+	$scope.moveFromTodoToDoing=function(id){
+		    var x=$scope.todos.splice(id, 1);
+		    $scope.doings.push(x[0]);
+	}		
+	$scope.moveFromTodoToDone=function(id){
+		    var x=$scope.todos.splice(id, 1);
+		    $scope.dones.push(x[0]);
+	}	
+	$scope.moveFromDoingToTodo=function(id){
+		    var x=$scope.doings.splice(id, 1);
+		    $scope.todos.push(x[0]);		
+	}
 });
 
 app.controller('OtherController',function($scope){
