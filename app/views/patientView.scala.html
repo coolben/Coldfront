@@ -1,19 +1,21 @@
+@(message: String)
+
 <html>
 <!--<script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>-->
 
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Coldfront</title>
-  <link rel="stylesheet" href="css/foundation.css" />
-  <script src="js/vendor/modernizr.js"></script>
+  <link rel="stylesheet" href="@routes.Assets.at("css/foundation.css")" />
+  <script src="@routes.Assets.at("js/vendor/modernizr.js")"></script>
 
   <!--Angular-->
-  <script src="@routes.Assets.at("public/bower_components/angular", "angular.js")" charset="utf-8"></script>
-  <script src="@routes.Assets.at("public/bower_components/angular-route", "angular-route.js")"></script>
-	<script src="@routes.Assets.at("public/bower_components/ng-polymer-elements", "ng-polymer-elements.min.js")"></script>
+  <script src="@routes.Assets.at("bower_components/angular/angular.js")" charset="utf-8"></script>
+  <script src="@routes.Assets.at("bower_components/angular-route/angular-route.js")"></script>
+	<script src="@routes.Assets.at("bower_components/ng-polymer-elements/ng-polymer-elements.min.js")"></script>
 
 
-  <script src="./js/script.js" charset="utf-8"></script>
+  <script src="@routes.Assets.at("js/script.js")" charset="utf-8"></script>
   <script type="text/javascript">
     window.onload = function () {
 	    var url = window.location;
@@ -23,28 +25,28 @@
   </script>
 
   <!--Polymer-->
-  <script src="@routes.Assets.at("public/bower_components/webcomponentsjs", "webcomponents.js")"></script>
-  <link rel="import" href="@routes.Assets.at("public/bower_components/core-toolbar", "core-toolbar.html")">
-  <link rel="import" href="@routes.Assets.at("public/bower_components/core-menu", "core-menu.html")">
-  <link rel="import" href="@routes.Assets.at("public/bower_components/core-item", "core-item.html")">
-  <link rel="import" href="@routes.Assets.at("public/bower_components/core-pages", "core-pages.html")">
-  <link rel="import" href="@routes.Assets.at("public/bower_components/core-overlay/core-overlay.html")">
-  <link rel="import" href="@routes.Assets.at("public/bower_components/core-header-panel", "core-header-panel.html")">
-  <link rel="import" href="@routes.Assets.at("public/bower_components/core-drawer-panel", "core-drawer-panel.html")">
-  <link rel="import" href="@routes.Assets.at("public/bower_components/core-icons", "core-icons.html")">
-	<link rel="import" href="@routes.Assets.at("public/bower_components/core-scaffold", "core-scaffold.html")">
-  <link rel="import" href="@routes.Assets.at("public/bower_components/paper-input", "paper-input.html")">
-  <link rel="import" href="@routes.Assets.at("public/bower_components/paper-icon-button", "paper-icon-button.html")">
-  <link rel="import" href="@routes.Assets.at("public/bower_components/paper-tabs", "paper-tabs.html")">
-  <link rel="import" href="@routes.Assets.at("public/bower_components/paper-shadow", "paper-shadow.html")">
-  <link rel="import" href="@routes.Assets.at("public/bower_components/font-roboto", "roboto.html")">  
-  <link rel="import" href="@routes.Assets.at("public/bower_components/core-collapse", "core-collapse.html")">
-  <link rel="import" href="@routes.Assets.at("public/bower_components/core-menu", "core-menu.html")">
-  <link rel="import" href="@routes.Assets.at("public/bower_components/paper-dropdown", "paper-dropdown.html")">
-  <link rel="import" href="@routes.Assets.at("public/bower_components/paper-item", "paper-item.html")">
-  <link rel="import" href="@routes.Assets.at("public/bower_components/paper-dropdown-menu", "paper-dropdown-menu.html")">  
-  <link rel="import" href="@routes.Assets.at("public/bower_components/paper-dialog", "paper-dialog.html")">  
-  <link rel="import" href="@routes.Assets.at("public/bower_components/paper-dialog", "paper-dialog-base.html")">  
+  <script src="@routes.Assets.at("bower_components/webcomponentsjs/webcomponents.js")"></script>
+  <link rel="import" href="@routes.Assets.at("bower_components/core-toolbar/core-toolbar.html")">
+  <link rel="import" href="@routes.Assets.at("bower_components/core-menu/core-menu.html")">
+  <link rel="import" href="@routes.Assets.at("bower_components/core-item/core-item.html")">
+  <link rel="import" href="@routes.Assets.at("bower_components/core-pages/core-pages.html")">
+  <link rel="import" href="@routes.Assets.at("bower_components/core-overlay/core-overlay.html")">
+  <link rel="import" href="@routes.Assets.at("bower_components/core-header-panel/core-header-panel.html")">
+  <link rel="import" href="@routes.Assets.at("bower_components/core-drawer-panel/core-drawer-panel.html")">
+  <link rel="import" href="@routes.Assets.at("bower_components/core-icons/core-icons.html")">
+	<link rel="import" href="@routes.Assets.at("bower_components/core-scaffold/core-scaffold.html")">
+  <link rel="import" href="@routes.Assets.at("bower_components/paper-input/paper-input.html")">
+  <link rel="import" href="@routes.Assets.at("bower_components/paper-icon-button/paper-icon-button.html")">
+  <link rel="import" href="@routes.Assets.at("bower_components/paper-tabs/paper-tabs.html")">
+  <link rel="import" href="@routes.Assets.at("bower_components/paper-shadow/paper-shadow.html")">
+  <link rel="import" href="@routes.Assets.at("bower_components/font-roboto/roboto.html")">  
+  <link rel="import" href="@routes.Assets.at("bower_components/core-collapse/core-collapse.html")">
+  <link rel="import" href="@routes.Assets.at("bower_components/core-menu/core-menu.html")">
+  <link rel="import" href="@routes.Assets.at("bower_components/paper-dropdown/paper-dropdown.html")">
+  <link rel="import" href="@routes.Assets.at("bower_components/paper-item/paper-item.html")">
+  <link rel="import" href="@routes.Assets.at("bower_components/paper-dropdown-menu/paper-dropdown-menu.html")">  
+  <link rel="import" href="@routes.Assets.at("bower_components/paper-dialog/paper-dialog.html")">  
+  <link rel="import" href="@routes.Assets.at("bower_components/paper-dialog/paper-dialog-base.html")">  
 <style>
 body {
   font-family: sans-serif;
@@ -105,7 +107,7 @@ ul{
 	  <h2>Patient Chart: {{patientDetails.firstName}} {{patientDetails.lastName}} </h2>
 	  <div class ='small-12 columns' style="margin-top:50px">
 			<paper-shadow class='card large-4  medium-6 small-12 columns' z="1">
-				<img src="img/female.png" style="width:50px;height:auto" /><h4 style="display:inline"> {{patientDetails.firstName}} {{patientDetails.lastName}}</h4>
+				<img src="@routes.Assets.at("img/female.png")" style="width:50px;height:auto" /><h4 style="display:inline"> {{patientDetails.firstName}} {{patientDetails.lastName}}</h4>
 				<br />
 				<span>Address: {{patientDetails.address}}</span><br/>
 				<span>Email:   {{patientDetails.email}}</span><br/>

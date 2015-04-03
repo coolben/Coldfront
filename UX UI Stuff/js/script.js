@@ -36,7 +36,7 @@ app.controller('PatientController',  function($scope,$http) {
 
     var responsePromise = $http({
       method: 'GET',
-      url: "https://taurus.i3l.gatech.edu:8443/HealthPort/fhir/Patient?format=json",
+      url: "@routes.Application.listPatients()",
       headers: {'Content-Type':  "application/x-www-form-urlencoded; charset=utf-8"}
     });
 

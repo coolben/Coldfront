@@ -1,7 +1,293 @@
 @(message: String)
 
-@main("Welcome to Play") {
+<html>
+<!--<script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>-->
 
-    @play20.welcome(message)
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>Coldfront</title>
+	<link rel="stylesheet" href="@routes.Assets.at("css/foundation.css")" />
+	<script src="@routes.Assets.at("js/vendor/modernizr.js")"></script>
 
+	<!--Angular-->
+	<script src="@routes.Assets.at("bower_components/angular/angular.js")" charset="utf-8"></script>
+	<script src="@routes.Assets.at("bower_components/angular-route/angular-route.js")"></script>
+	<script src="@routes.Assets.at("bower_components/ng-polymer-elements/ng-polymer-elements.min.js")"></script>
+
+
+  <script src="@routes.Assets.at("js/script.js")" charset="utf-8"></script>
+
+  <!--Polymer-->
+  <script src="@routes.Assets.at("bower_components/webcomponentsjs/webcomponents.js")"></script>
+  <link rel="import" href="@routes.Assets.at("bower_components/core-toolbar/core-toolbar.html")">
+  <link rel="import" href="@routes.Assets.at("bower_components/core-menu/core-menu.html")">
+  <link rel="import" href="@routes.Assets.at("bower_components/core-item/core-item.html")">
+  <link rel="import" href="@routes.Assets.at("bower_components/core-pages/core-pages.html")">
+  <link rel="import" href="@routes.Assets.at("bower_components/core-overlay/core-overlay.html")">
+  <link rel="import" href="@routes.Assets.at("bower_components/core-header-panel/core-header-panel.html")">
+  <link rel="import" href="@routes.Assets.at("bower_components/core-drawer-panel/core-drawer-panel.html")">
+  <link rel="import" href="@routes.Assets.at("bower_components/core-icons/core-icons.html")">
+	<link rel="import" href="@routes.Assets.at("bower_components/core-scaffold/core-scaffold.html")">
+  <link rel="import" href="@routes.Assets.at("bower_components/paper-input/paper-input.html")">
+  <link rel="import" href="@routes.Assets.at("bower_components/paper-icon-button/paper-icon-button.html")">
+  <link rel="import" href="@routes.Assets.at("bower_components/paper-tabs/paper-tabs.html")">
+  <link rel="import" href="@routes.Assets.at("bower_components/paper-shadow/paper-shadow.html")">
+  <link rel="import" href="@routes.Assets.at("bower_components/font-roboto/roboto.html")">  
+  <link rel="import" href="@routes.Assets.at("bower_components/core-collapse/core-collapse.html")">
+  <link rel="import" href="@routes.Assets.at("bower_components/core-menu/core-menu.html")">
+  <link rel="import" href="@routes.Assets.at("bower_components/paper-dropdown/paper-dropdown.html")">
+  <link rel="import" href="@routes.Assets.at("bower_components/paper-item/paper-item.html")">
+  <link rel="import" href="@routes.Assets.at("bower_components/paper-dropdown-menu/paper-dropdown-menu.html")">  
+  <link rel="import" href="@routes.Assets.at("bower_components/paper-dialog/paper-dialog.html")">  
+  <link rel="import" href="@routes.Assets.at("bower_components/paper-dialog/paper-dialog-base.html")">  
+
+<style>
+body {
+  font-family: sans-serif;
 }
+core-header-panel {
+  background: white;
+}
+core-toolbar {
+  background-color: #0277BD;
+  color:#fff;
+}
+#navheader {
+  background-color: #56BA89;
+}
+.content {
+  background-color:#dddddd;
+}
+/* drawer is always visible on a wide screen
+   so menu button isn't required */
+core-drawer-panel:not([narrow]) #navicon {
+  display: none;
+}
+
+.header-1{
+	background:#B2EBF2;
+	padding: 20px;
+}
+
+div[drawer]{
+	background: #2196F3;
+	min-width: 300px
+}
+
+div[main]{
+	padding-left:20px;
+	padding-right:20px;
+}
+
+ul{
+	margin-bottom: 0
+}
+
+.patient-sidebar{
+	float:right;min-height:500px;background:#E91E63;width:300px;z-index:5;float:right
+}
+
+#dialog{
+	width:75%;
+	height:75%;
+} 
+</style>
+</head>
+<body fullbleed vertical ng-app="coldfront">
+<core-toolbar class='medium-tall' ng-controller='ToolbarController'>
+
+  <paper-icon-button id="navicon" icon="menu"></paper-icon-button>
+		<span flex  ng-hide="!search">Coldfront</span>
+		<paper-icon-button  id="searchbutton" icon="search"  ng-hide="search" ng-click="searchfunction()"></paper-icon-button>
+		<paper-input  flex label="" ng-hide="search"></paper-input>
+		<paper-icon-button  ng-hide="!search" id="searchbutton" icon="search" ng-click="opensearch()"></paper-icon-button>
+		<a  href="#"><img src="@routes.Assets.at("img/female.png")" style="width:50px;height:auto" /></a>
+
+    <div class="bottom fit" horizontal layout>
+		  <paper-tabs  flex style='max-width:400px' selected="0">
+    		<paper-tab>Patient List</paper-tab>
+    		<paper-tab>Task List</paper-tab>
+  		</paper-tabs>
+  	</div>
+  </core-toolbar>
+  <core-pages selected="0" fancy>
+  	<div ng-controller="PatientController">
+		<div vertical layout style="background:#EEEEEE;min-height:570px">
+			<div>
+				<paper-shadow z="2">
+					<div horizontal layout flex class="header-1" style="background:#E0E0E0">
+			 			My Patients / 					
+			 			<paper-dropdown-menu style='color:#000;padding:0px;margin:0px;width:80px'>
+				    <paper-dropdown class="dropdown" >
+				        <core-menu class="menu" ng-model="filter" bind-polymer valueattr="value" style='text-align:center' ng-change="handleFilter()">
+			            <paper-item value=0>7 South</paper-item>
+			            <paper-item value=1>8 North</paper-item>
+			            <paper-item value=2>Recent</paper-item>
+			            <paper-item value=3>All</paper-item>
+			  	      </core-menu>
+				    </paper-dropdown>
+					</paper-dropdown-menu>
+			 			<paper-icon-button  id="refreshButton" icon="refresh" text="Refresh" ng-click="populatePatients()" style='margin:0px;padding:0px'></paper-icon-button>
+					</div>
+				</paper-shadow>
+				</div>	
+				<div  class="row" style="margin-top:20px" >
+				<div class='large-10  large-offset-1 medium-10 medium-offset-1 small-12'>
+					<paper-dialog id="dialog" heading="Patient View">
+					  <p>This app would like to launch a small, unmanned vehicle into space.</p>
+						<hr />
+						<p> MRN: {{mrn}}</p>
+						<p> DOB: {{dob}}</p>
+						<p> Cheif Complaint: {{primary}}</p>
+						<p> Physician: {{physician}}</p>
+					  <paper-button affirmative default autofocus style='background-color:#03A9F4;color:#222' ng-click="closePatientView()">Done</paper-button>
+					  <paper-button affirmative default autofocus style='background-color:#03A9F4;color:#222' >
+					  <a href="patientPage?mrn={{mrn}}" target="_blank">Open in New Tab</a></paper-button>
+					</paper-dialog>						
+					<paper-shadow z="2">
+						<table class='small-12' style="background:#E0F7FA">
+							<thead>
+								<tr>
+									<th>Name</th>
+									<th>MRN</th>
+									<th>DOB</th>
+									<th>Primary Complaint</th>
+									<th>Attending Physician</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr ng-repeat="patient in patients">
+									<td><a href="#" ng-click="patientDetails($index)">{{patient.name}}</a></td>
+									<td>{{patient.MRN}}</td>
+									<td>{{patient.dob}}</td>
+									<td>{{patient.primary}}</td>
+									<td>{{patient.physician}}</td>
+								</tr>
+							</tbody>
+						</table>
+					</paper-shadow>
+				</div>
+  		</div>
+	  	</div>
+	  </div>
+	  <div>
+
+	  <div class='row' ng-controller='TaskController'>
+	  				<div class='large-3 columns' style="background:#E0F7FA;min-height:600px;padding:0px">
+	  				<paper-shadow  z='1' class='header-1 small-12 ' style='margin-bottom:10px;background:#E0F7FA'>
+	  					<div class=''>Patients</div>
+	  					</paper-shadow>
+	  				<div class='row' >
+							<paper-shadow  z='1' class='card  small-10 small-offset-1  columns' style='margin:10px;margin-bottom:40px;background:#fff'>
+					    	<div class='small-3 columns'>
+					    		<img src="@routes.Assets.at("img/female.png")" style="margin-top:15px;width:50px;height:auto" />
+					    	</div>
+					    	<div class="small-9 columns">
+					    		Carl Saldanha <br />
+					    		Headache <br />
+					    		<a href="#">Notes</a> | <a href="#">Labs</a> | <a href="#">Todos</a>
+					    	</div>
+							</paper-shadow>
+						</div>
+						<div class='row' >
+							<paper-shadow  z='1' class='card  small-10 small-offset-1 columns' style='margin:10px;margin-bottom:40px;background:#fff'>
+					    	<div class='small-3 columns' >
+					    		<img src="img/female.png" style="margin-top:15px;width:50px;height:auto" />
+					    	</div>
+					    	<div class="small-9 columns">
+					    		Vu Nguygen <br />
+					    		Headache <br />
+					    		<a href="#">Notes</a> | <a href="#">Labs</a> | <a href="#">Todos</a>
+					    	</div>
+							</paper-shadow>
+						</div>
+						<div class='row' >
+							<paper-shadow  z='1' class='card small-10 small-offset-1 columns' style='margin-bottom:40px;background:#fff'>
+					    	<div class='small-3 columns'>
+					    		<img src="img/female.png" style="margin-top:15px;width:50px;height:auto" />
+					    	</div>
+					    	<div class="small-9 columns">
+					    		Ben Nguygen <br />
+					    		Headache <br />
+					    		<a href="#">Notes</a> | <a href="#">Labs</a> | <a href="#">Todos</a>
+					    	</div>
+							</paper-shadow>
+						</div>
+						<div class='row' >
+							<paper-shadow  z='1' class='card  small-10 small-offset-1  columns' style='margin:10px;margin-bottom:40px;background:#fff'>
+					    	<div class='small-3 columns'>
+					    		<img src="img/female.png" style="margin-top:15px;width:50px;height:auto" />
+					    	</div>
+					    	<div class="small-9 columns">
+					    		Erik Reinerstein <br />
+					    		Headache <br />
+					    		<a href="#">Notes</a> | <a href="#">Labs</a> | <a href="#">Todos</a>
+					    	</div>
+							</paper-shadow>														
+							</div>
+							</div>
+	  				<div class='large-3 columns' style="background:#B2EBF2;min-height:600px;padding:0px">
+	  					<paper-shadow  z='1' class='header-1 small-12 ' style='margin-bottom:10px;background:#B2EBF2'>
+	  						<div class=''>To Do</div>
+	  					</paper-shadow>
+	  					<div ng-repeat="todo in todos">
+	  					<div class='row' style="width:100%">
+							<paper-shadow  z='1' class='card small-10 small-offset-1 columns' style='min-height:100px;margin-bottom:40px;padding:10px;background:#fff'>
+								{{todo}}<br/>
+								<div style='position:absolute;bottom:5px;font-size:0.8em'>
+									<a herf="#" ng-click="moveFromTodoToDoing($index)">Mark as Doing</a> | <a herf="#" ng-click="moveFromTodoToDone($index)">Mark as Done</a>
+								</div>
+							</paper-shadow>
+							</div>
+							</div>
+	  				</div>
+	  				<div class='large-3 columns' style="background:#80DEEA;min-height:600px;padding:0px">
+	  				<paper-shadow  z='1' class='header-1 small-12 ' style='margin-bottom:10px;background:#80DEEA'>
+	  					<div class=''>In Progress</div>
+	  					</paper-shadow>	  				
+	  					<div ng-repeat="doing in doings">
+							<div class='row' style="width:100%">
+							<paper-shadow  z='1' class='card small-10 small-offset-1 columns' style='min-height:100px;margin-bottom:40px;padding:10px;background:#fff'>
+								{{doing}}<br />
+								<div style='position:absolute;bottom:5px;font-size:0.8em'>
+									<a herf="#"  ng-click="moveFromDoingToTodo($index)">Mark as To Do</a> | <a herf="#" ng-click="moveFromDoingToDone($index)">Mark as Done</a>
+								</div>
+							</paper-shadow>		
+							</div>
+							</div>
+	  				</div>
+	  				<div class='large-3 columns' style="background:#4DD0E1;min-height:600px;padding:0px">
+							<paper-shadow  z='1' class='header-1 small-12 ' style='margin-bottom:10px;background:#4DD0E1'>
+	  					<div class=''>Done</div>
+	  					</paper-shadow>	  				
+	  					<div ng-repeat="done in dones">
+							<div class='row' style="width:100%">
+							<paper-shadow  z='1' class='card small-10 small-offset-1 columns' style='min-height:100px;margin-bottom:40px;padding:10px;background:#fff'>
+								{{done}}<br />
+								<div style='position:absolute;bottom:5px;font-size:0.8em'>
+									<a herf="#" ng-click='removeFromDone($index)'>Remove from List</a>
+								</div>
+							</paper-shadow>		
+							</div>
+							</div>
+	  				</div>
+	  </div>
+	 </core-pages>
+
+</body>
+
+
+<script type="text/javascript">
+
+var tabs = document.querySelector('paper-tabs');
+var pages = document.querySelector('core-pages');
+pages.selected = 0; 
+tabs.selected=0;
+tabs.addEventListener('core-select',function(){
+  pages.selected = tabs.selected;
+});
+
+</script>
+
+
+</html>
