@@ -9,9 +9,37 @@ import play.api.libs.ws.ning.NingAsyncHttpClientConfigBuilder
 import scala.concurrent.Future
 //import play.api.libs.concurrent.Execution.Implicits._
 import scala.concurrent.ExecutionContext.Implicits.global
+import scala.slick.driver.H2Driver.simple._
+
+import DB._
+
 object Application extends Controller {
   val baseUrl = "http://fhirtest.uhn.ca/baseDstu1/"
-    
+  val users: TableQuery[Users] = TableQuery[Users]
+  val patients: TableQuery[Patients] = TableQuery[Patients]
+  val todos: TableQuery[Todos] = TableQuery[Todos]
+  
+  implicit val patientWrites = new Writes[Patient]{
+    def writes(patient: Patient) = Json.obj(
+        "id" -> patient.id,
+        "nameFirst" -> patient.nameFirst,
+        "nameLast" -> patient.nameLast
+    )
+}
+  
+  val db = Database.forURL("jdbc:h2:mem:coldfront;DB_CLOSE_DELAY=-1", driver = "org.h2.Driver")
+  db.withSession { implicit session =>
+
+    // Create the schema
+    (users.ddl ++ patients.ddl ++ todos.ddl).create
+
+    // Insert some fake data
+    users += User(1, "vu")
+    users += User(2, "john")
+    patients += Patient("Vu", "Nguyen")
+    patients += Patient("John", "Doe")
+  
+  }
   def index = Action {
     Ok(views.html.index("Your new application is ready."))
   }
@@ -24,10 +52,11 @@ object Application extends Controller {
     Ok(Json.toJson("POST SUCCESS"))
   }
   
-  def listPatients = Action.async {
-    val url = baseUrl + "Patient?_format=json"
-    WS.url(url).get().map { response =>
-        Ok(response.json)
+  def listPatients = Action {
+      //val patientWrites = Json.writes[Patients]
+    db.withSession{ implicit session =>
+      val results = for {p <- patients} yield (p.id.toString + p.nameLast + ", " + p.nameFirst)
+      Ok(Json.toJson(patients.list))
     }
   }
   
