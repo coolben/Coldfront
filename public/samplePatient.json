@@ -1,0 +1,64 @@
+{"title":"Balthasar BURGHAUSER (Pat-350)",
+"id":"http://fhirtest.uhn.ca/baseDstu1/Patient/13123",
+"link":[{
+	"rel":"self",
+	"href":"http://fhirtest.uhn.ca/baseDstu1/Patient/13123/_history/1"
+}],
+"updated":"2015-03-03T19:16:48.963-05:00",
+"published":"2015-03-03T19:16:48.962-05:00",
+"content":{
+	"resourceType":"Patient",
+	"text":{
+			"status":"generated",
+			"div":"<div>
+				<div class=\"hapiHeaderText\"> Balthasar <b>BURGHAUSER </b></div>
+				<table class=\"hapiPropertyTable\">
+					<tbody>
+						<tr>
+							<td>Identifier</td>
+							<td>Pat-350</td>
+						</tr>
+						<tr>
+							<td>Address</td>
+							<td><span>Luebeck </span></td>
+						</tr>
+						<tr>
+							<td>Date of birth</td>
+							<td><span>14 April 1817</span></td>
+						</tr>
+					</tbody>
+				</table>
+			   </div>"
+	},
+	"identifier":[{
+		"system":"http://kh-hh.de/mio/patients",
+		"value":"Pat-350"
+	}],
+	"name":[{
+				"use":"official",
+				"family":["Burghauser"],
+				"given":["Balthasar"]
+			},
+			{
+				"use":"maiden",
+				"given":["Balthasar"]
+	}],
+	"gender":{
+		"coding":[{
+			"system":"http://hl7.org/fhir/v3/AdministrativeGender",
+			"code":"M"
+		}]
+	},
+	"birthDate":"1817-04-14",
+	"address":[{
+				"use":"home",
+				"city":"Luebeck",
+				"zip":"23562"
+	}],
+	"maritalStatus":{
+		"coding":[{
+			"system":"http://hl7.org/fhir/v3/MaritalStatus",
+			"code":"S"
+		}]
+	}
+}}
