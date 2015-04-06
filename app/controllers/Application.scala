@@ -34,8 +34,8 @@ object Application extends Controller {
     (users.ddl ++ patients.ddl ++ todos.ddl).create
 
     // Insert some fake data
-    users += (1, "vu")
-    users += (2, "john")
+    users += User(1, "vu")
+    users += User(2, "john")
     patients += Patient("Vu", "Nguyen")
     patients += Patient("John", "Doe")
   

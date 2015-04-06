@@ -20,67 +20,67 @@ class Patients(tag: Tag) extends Table[Patient](tag, "PATIENTS") {
     //(id, nameFirst, nameLast)
 }
 
-class Orders(tag: Tag) extends Table[(Int, Int, String, String, Boolean, String, String)](tag, "ORDERS") {
-  def id: Column[Int] = column[Int]("ORDER_ID", O.PrimaryKey)
-  def patientID: Column[Int] = column[Int]("PATIENT_ID")
-  def description: Column[String] = column[String]("DESCRIPTION")
-  def location: Column[String] = column[String]("LOCATION")
-  def complete: Column[Boolean] = column[Boolean]("COMPLETE")
-  def dtDue: Column[String] = column[String]("DT_DUE")
-  def dtCompleted: Column[String] = column[String]("DT_COMPMLETED")
+case class Order(patientId: Int, description: String, location: String, complete: Boolean, 
+                dtDue: String, dtCompleted: String, id: Option[Int] = None)
+class Orders(tag: Tag) extends Table[Order](tag, "ORDERS") {
+  def id = column[Int]("ORDER_ID", O.PrimaryKey)
+  def patientId = column[Int]("PATIENT_ID")
+  def description = column[String]("DESCRIPTION")
+  def location = column[String]("LOCATION")
+  def complete = column[Boolean]("COMPLETE")
+  def dtDue = column[String]("DT_DUE")
+  def dtCompleted = column[String]("DT_COMPMLETED")
 
-  def * : ProvenShape[(Int, Int, String, String, Boolean, String, String)] =
-    (id, patientID,  description, location, complete, dtDue, dtCompleted)
+  def * = (patientId, description, location, complete, dtDue, dtCompleted, id.?) <> (Order.tupled, Order.unapply)
+  //def * : ProvenShape[(Int, Int, String, String, Boolean, String, String)] =
+    //(id, patientID,  description, location, complete, dtDue, dtCompleted)
   
   def patient: ForeignKeyQuery[Patients, Patient] =
-    foreignKey("PATIENT_FK", patientID, TableQuery[Patients])(_.id)
+    foreignKey("PATIENT_FK", patientId, TableQuery[Patients])(_.id)
 }
   
-class Labs(tag: Tag)
-  extends Table[(Int)](tag, "LABS"){
-      def id: Column[Int] = column[Int]("LAB_ID", O.PrimaryKey)
-      
-      def * : ProvenShape[(Int)] = 
-        (id)
-}
-  
-class Medications(tag: Tag)
-  extends Table[(Int)](tag, "MEDICATIONS"){
-      def id: Column[Int] = column[Int]("MEDICATION_ID", O.PrimaryKey)
-      
-      def * : ProvenShape[(Int)] = 
-        (id)
-}
-  
-class Notes(tag: Tag)
-  extends Table[(Int)](tag, "NOTES"){
-      def id: Column[Int] = column[Int]("NOTE_ID", O.PrimaryKey)
-      
-      def * : ProvenShape[(Int)] = 
-        (id)
-}
-  
-class Todos(tag: Tag)
-  extends Table[(Int)](tag, "TODOS"){
-      def id: Column[Int] = column[Int]("TODO_ID", O.PrimaryKey)
-      
-      def * : ProvenShape[(Int)] = 
-        (id)
+case class Lab(id: Int, description: String)
+class Labs(tag: Tag) extends Table[Lab](tag, "LABS"){
+  def id = column[Int]("LAB_ID", O.PrimaryKey)
+  def description = column[String]("DESCRIPTION")
+  def * = (id, description) <> (Lab.tupled, Lab.unapply)
 }
 
-class Observations(tag: Tag)
-  extends Table[(Int)](tag, "OBSERVATIONS"){
-      def id: Column[Int] = column[Int]("OBSERVATION_ID", O.PrimaryKey)
-      
-      def * : ProvenShape[(Int)] = 
-        (id)
+case class Medication(id: Int, name: String)
+class Medications(tag: Tag) extends Table[Medication](tag, "MEDICATIONS"){
+  def id = column[Int]("MEDICATION_ID", O.PrimaryKey)
+  def name = column[String]("NAME")
+  
+  def * = (id, name) <> (Medication.tupled, Medication.unapply)
 }
   
-class Users(tag: Tag)
-  extends Table[(Int, String)](tag, "USERS"){
-      def id: Column[Int] = column[Int]("USER_ID", O.PrimaryKey)
-      def username: Column[String] = column[String]("USERNAME")
-      
-      def * : ProvenShape[(Int, String)] = 
-        (id, username)
+case class Note(id: Int, text: String)
+class Notes(tag: Tag) extends Table[Note](tag, "NOTES"){
+  def id = column[Int]("NOTE_ID", O.PrimaryKey)
+  def text = column[String]("TEXT")
+  
+  def * = (id, text) <> (Note.tupled, Note.unapply)
+}
+
+case class Todo(id: Int, text: String)
+class Todos(tag: Tag) extends Table[Todo](tag, "TODOS"){
+  def id = column[Int]("TODO_ID", O.PrimaryKey)
+  def text = column[String]("TEXT")
+  
+  def * = (id, text) <> (Todo.tupled, Todo.unapply)
+}
+
+case class Observation(id: Int, text:String)
+class Observations(tag: Tag) extends Table[Observation](tag, "OBSERVATIONS"){
+  def id = column[Int]("OBSERVATION_ID", O.PrimaryKey)
+  def text = column[String]("TEXT")
+  def * = (id, text) <> (Observation.tupled, Observation.unapply)
+}
+  
+case class User(id: Int, username: String)
+class Users(tag: Tag) extends Table[User](tag, "USERS"){
+  def id = column[Int]("USER_ID", O.PrimaryKey)
+  def username = column[String]("USERNAME")
+  
+  def * = (id, username) <> (User.tupled, User.unapply)
 }
