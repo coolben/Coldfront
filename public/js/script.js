@@ -28,13 +28,7 @@ app.controller('PatientController',  function($scope,$http) {
 	var filterArray=["7 South", "8 North", "Recent", "All"];
 	var d=document.querySelector('paper-dialog');
 
-	patients.push({"id":0,"from":"7 South","name":"Akshar Rawal", "MRN":"141542","dob": "02/14/1991","primary":"Headache","physician":"Dr. Braunstein"});
-	patients.push({"id":1,"from":"7 South","name":"Ben Nguyen",  "MRN":"142324", "dob":"05/31/1991","primary":"Stomachache","physician":"Dr. Braunstein"});
-	patients.push({"id":2,"from":"8 North","name":"Carl Saldanha", "MRN":"153234", "dob":"12/06/1991","primary":"Sprain","physician":"Dr. Braunstein"});
-	patients.push({"id":3,"from":"8 North","name":"Erik Reinerstein","MRN":"153466","dob": "01/24/1991","primary":"Burn","physician":"Dr. Braunstein"});
-	patients.push({"id":4,"from":"7 South","name":"Vu Nguyen","MRN":"153466", "dob":"08/10/1991","primary":"Bite","physician":"Dr. Braunstein"});
-
-    var responsePromise = $http({
+    /*var responsePromise = $http({
       method: 'GET',
 	    url: "/patients",
       headers: {'Content-Type':  "application/x-www-form-urlencoded; charset=utf-8"}
@@ -42,6 +36,42 @@ app.controller('PatientController',  function($scope,$http) {
 
     responsePromise.success(function(data, status, headers, config)  {
       console.log(data);
+      for (var i = 0; i < data.length; i++) {
+	    var patient = {};
+      	patient['id'] = data[i].id;
+      	patient['name'] = data[i].nameFirst + " " + data[i].nameLast;
+      	patient['MRN'] = data[i].id;
+		//patient['MRN'] = /\\(\d+)/.data[i].id;
+      	console.log(patient.MRN);
+      	patient['dob'] = "04/07/2015";
+      	patient['from'] = "7 South";
+      	patient['primary'] = "Headache";
+      	patient['physician'] = "Dr. Braunstein";
+      	patients.push(patient);
+      }      
+	});
+	*/
+	var responsePromise = $http({
+      method: 'GET',
+	    url: "http://fhirtest.uhn.ca/baseDstu1/Patient?_format=json",
+      headers: {'Content-Type':  "application/x-www-form-urlencoded; charset=utf-8"}
+    });
+
+    responsePromise.success(function(data, status, headers, config)  {
+      console.log(data);
+      for (var i = 0; i < data.entry.length; i++) {
+	    var patient = {};
+      	patient['id'] = data.entry[i].id;
+      	patient['name'] = data.entry[i].content.name[0].given[0] + " " + data.entry[i].content.name[0].family[0];
+      	patient['MRN'] = data.entry[i].id;
+		//patient['MRN'] = /\\(\d+)/.data[i].id;
+      	//console.log(patient.MRN);
+      	patient['dob'] = data.entry[i].content.birthDate;
+      	patient['from'] = "7 South";
+      	patient['primary'] = "Headache";
+      	patient['physician'] = "Dr. Braunstein";
+      	patients.push(patient);
+      }      
     });
     responsePromise.error(function(data, status, headers, config) {
       alert("AJAX failed!");
