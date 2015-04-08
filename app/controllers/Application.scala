@@ -16,12 +16,12 @@ import DB._
 
 object Application extends Controller {
   val baseUrl = "http://fhirtest.uhn.ca/baseDstu1/"
-  
+
   // Table Queries for H2 database tables
   val users: TableQuery[Users] = TableQuery[Users]
   val patients: TableQuery[Patients] = TableQuery[Patients]
   val todos: TableQuery[Todos] = TableQuery[Todos]
-  
+
   // Writes to convert our models to json
   implicit val patientWrites = new Writes[Patient]{
     def writes(patient: Patient) = Json.obj(
@@ -34,7 +34,7 @@ object Application extends Controller {
     ((__ \ "content" \ "name" )(0)\ "given")(0).read[String] ~
     ((__ \ "content" \ "name" )(0)\ "family")(0).read[String]
   ).tupled
-  
+
   // The database object -- DB will remain open as long as JVM is running
   val db = Database.forURL("jdbc:h2:mem:coldfront;DB_CLOSE_DELAY=-1", driver = "org.h2.Driver")
   db.withSession { implicit session =>
@@ -46,7 +46,7 @@ object Application extends Controller {
     // Insert some fake data
     //users += User(1, "vu")
     //users += User(2, "john")
-    
+
     val patientWS = WS.url(baseUrl + "Patient?_format=json").get().map {
       results =>
         Try(
@@ -96,7 +96,7 @@ object Application extends Controller {
   }
   
   def getConditions(patientId: Long) = Action.async {
-    val url = baseUrl + s"Condition?subject._id=13123&_format=json"
+    val url = baseUrl + s"Condition?subject._id=$patientId&_format=json"
     WS.url(url).get().map { response =>
         Ok(response.json)
     }
