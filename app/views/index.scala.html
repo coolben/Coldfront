@@ -156,7 +156,7 @@ ul{
 								</tr>
 							</thead>
 							<tbody>
-								<tr ng-repeat="patient in patients">
+								<tr ng-repeat="patient in patients track by $index">
 									<td><a href="#" ng-click="patientDetails($index)">{{patient.name}}</a></td>
 									<td>{{patient.MRN}}</td>
 									<td>{{patient.dob}}</td>
