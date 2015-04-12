@@ -8,10 +8,10 @@ import org.joda.time.LocalDateTime
 import org.joda.time.DateTime
 
 // Patients table
-case class Patient(nameFirst: String, nameLast: String, id: Option[Int] = None)
+case class Patient(nameFirst: String, nameLast: String, id: Option[Long] = None)
 class Patients(tag: Tag) extends Table[Patient](tag, "PATIENTS") {
   //Primary key column
-  def id = column[Int]("PATIENT_ID", O.PrimaryKey, O.AutoInc)
+  def id = column[Long]("PATIENT_ID", O.PrimaryKey, O.AutoInc)
   def nameFirst = column[String]("NAME_FIRST")
   def nameLast = column[String]("NAME_LAST")
   
@@ -20,11 +20,11 @@ class Patients(tag: Tag) extends Table[Patient](tag, "PATIENTS") {
     //(id, nameFirst, nameLast)
 }
 
-case class Order(patientId: Int, description: String, location: String, complete: Boolean, 
-                dtDue: String, dtCompleted: String, id: Option[Int] = None)
+case class Order(patientId: Long, description: String, location: String, complete: Boolean, 
+                dtDue: String, dtCompleted: String, id: Option[Long] = None)
 class Orders(tag: Tag) extends Table[Order](tag, "ORDERS") {
-  def id = column[Int]("ORDER_ID", O.PrimaryKey)
-  def patientId = column[Int]("PATIENT_ID")
+  def id = column[Long]("ORDER_ID", O.PrimaryKey)
+  def patientId = column[Long]("PATIENT_ID")
   def description = column[String]("DESCRIPTION")
   def location = column[String]("LOCATION")
   def complete = column[Boolean]("COMPLETE")
@@ -39,33 +39,33 @@ class Orders(tag: Tag) extends Table[Order](tag, "ORDERS") {
     foreignKey("PATIENT_ORDERS_FK", patientId, TableQuery[Patients])(_.id)
 }
   
-case class Lab(id: Int, description: String)
+case class Lab(id: Long, description: String)
 class Labs(tag: Tag) extends Table[Lab](tag, "LABS"){
-  def id = column[Int]("LAB_ID", O.PrimaryKey)
+  def id = column[Long]("LAB_ID", O.PrimaryKey)
   def description = column[String]("DESCRIPTION")
   def * = (id, description) <> (Lab.tupled, Lab.unapply)
 }
 
-case class Medication(id: Int, name: String)
+case class Medication(id: Long, name: String)
 class Medications(tag: Tag) extends Table[Medication](tag, "MEDICATIONS"){
-  def id = column[Int]("MEDICATION_ID", O.PrimaryKey)
+  def id = column[Long]("MEDICATION_ID", O.PrimaryKey)
   def name = column[String]("NAME")
   
   def * = (id, name) <> (Medication.tupled, Medication.unapply)
 }
   
-case class Note(id: Int, text: String)
+case class Note(id: Long, text: String)
 class Notes(tag: Tag) extends Table[Note](tag, "NOTES"){
-  def id = column[Int]("NOTE_ID", O.PrimaryKey)
+  def id = column[Long]("NOTE_ID", O.PrimaryKey)
   def text = column[String]("TEXT")
   
   def * = (id, text) <> (Note.tupled, Note.unapply)
 }
 
-case class Todo(id: Int, patientId:Int, text: String, state: Int)
+case class Todo(id: Long, patientId:Long, text: String, state: Int)
 class Todos(tag: Tag) extends Table[Todo](tag, "TODOS"){
-  def id = column[Int]("TODO_ID", O.PrimaryKey)
-  def patientId = column[Int]("PATIENT_ID")
+  def id = column[Long]("TODO_ID", O.PrimaryKey)
+  def patientId = column[Long]("PATIENT_ID")
   def text = column[String]("TEXT")
 
   /*********
@@ -85,17 +85,17 @@ class Todos(tag: Tag) extends Table[Todo](tag, "TODOS"){
     foreignKey("PATIENT_TODOS_FK", patientId, TableQuery[Patients])(_.id)
 }
 
-case class Observation(id: Int, text:String)
+case class Observation(id: Long, text:String)
 class Observations(tag: Tag) extends Table[Observation](tag, "OBSERVATIONS"){
-  def id = column[Int]("OBSERVATION_ID", O.PrimaryKey)
+  def id = column[Long]("OBSERVATION_ID", O.PrimaryKey)
   def text = column[String]("TEXT")
 
   def * = (id, text) <> (Observation.tupled, Observation.unapply)
 }
   
-case class User(id: Int, username: String)
+case class User(id: Long, username: String)
 class Users(tag: Tag) extends Table[User](tag, "USERS"){
-  def id = column[Int]("USER_ID", O.PrimaryKey)
+  def id = column[Long]("USER_ID", O.PrimaryKey)
   def username = column[String]("USERNAME")
   
   def * = (id, username) <> (User.tupled, User.unapply)

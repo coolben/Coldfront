@@ -118,6 +118,14 @@ object Application extends Controller {
     }
   }
 
+  def changeTodoState(todoId: Long, state: Int) = Action{
+    db.withSession { implicit session =>
+      val q = for { t <- todos if t.id === todoId} yield t.state
+      q.update(state).run
+      Ok(s"$todoId state set to $state") 
+    }
+  }
+
   def getConditions(patientId: Long) = Action.async {
     val url = baseUrl + s"Condition?subject._id=$patientId&_format=json"
     WS.url(url).get().map { response =>
