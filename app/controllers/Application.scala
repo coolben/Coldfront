@@ -35,6 +35,15 @@ object Application extends Controller {
     ((__ \ "content" \ "name" )(0)\ "family")(0).read[String]
   ).tupled
 
+  implicit val todosWrites = new Writes[Todo]{
+    def writes(todo: Todo) = Json.obj(
+      "id" -> todo.id,
+      "patientId" -> todo.patientId,
+      "text" ->  todo.text,
+      "state" -> todo.state
+    )
+  }
+
   // The database object -- DB will remain open as long as JVM is running
   val db = Database.forURL("jdbc:h2:mem:coldfront;DB_CLOSE_DELAY=-1", driver = "org.h2.Driver")
   db.withSession { implicit session =>
@@ -44,9 +53,16 @@ object Application extends Controller {
 
     (patients.ddl ++ todos.ddl).create
     // Insert some fake data
-    //users += User(1, "vu")
-    //users += User(2, "john")
-    todos +=
+    patients += Patient("Doe", "John")
+    patients += Patient("Doe", "Jane")
+    // users += User(1, "vu")
+    // users += User(2, "john")
+    todos += Todo(1, 1, "Replace catheter", 0)
+    todos += Todo(2, 1, "Check crocin order", 1)
+    todos += Todo(3, 1, "Turn patient", 100)
+    todos += Todo(4, 2, "Oral vent care", 0)
+    todos += Todo(5, 2, "Insert vent", 100)
+
 
     val patientWS = WS.url(baseUrl + "Patient?_format=json").get().map {
       results =>
@@ -95,7 +111,13 @@ object Application extends Controller {
         Ok(response.json)
     }
   }
-  
+
+  def listTodos = Action{
+    db.withSession{ implicit session =>
+      Ok(Json.toJson(todos.list))
+    }
+  }
+
   def getConditions(patientId: Long) = Action.async {
     val url = baseUrl + s"Condition?subject._id=$patientId&_format=json"
     WS.url(url).get().map { response =>

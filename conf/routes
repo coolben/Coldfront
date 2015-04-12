@@ -3,49 +3,50 @@
 # ~~~~
 
 # Home page
-GET     /                           controllers.Application.index
+GET     /                                   controllers.Application.index
 
-GET     /test/:name                 controllers.Application.test(name: String)
-POST    /test                       controllers.Application.testPost
+GET     /test/:name                         controllers.Application.test(name: String)
+POST    /test                               controllers.Application.testPost
 
-GET     /patients                   controllers.Application.listPatients
+GET     /patients                           controllers.Application.listPatients
 
-GET     /patient/:patientId         controllers.Application.getPatient(patientId: Long)
+GET     /patient/:patientId                 controllers.Application.getPatient(patientId: Long)
 
 GET     /patient/:patientId/conditions      controllers.Application.getConditions(patientId: Long)
 GET     /patient/:patientId/medications     controllers.Application.getMedications(patientId: Long)
 GET     /patient/:patientId/observations    controllers.Application.getObservations(patientId: Long)
 
-GET     /patientpage/:patientId						controllers.Application.getPatientViews(patientId:Long)
+GET     /patientpage/:patientId				controllers.Application.getPatientViews(patientId:Long)
 
 #Views to display HTML
-#GET     /login                      controllers.Application.loginView
+#GET     /login                             controllers.Application.loginView
 
 
 #REST calls to To Do
-#POST 	/ajax/register				controllers.Application.register
-#GET     /ajax/login                 controllers.Application.ajaxLogin
+#POST 	 /ajax/register				        controllers.Application.register
+#GET     /ajax/login                        controllers.Application.ajaxLogin
 
-#POST    /addLab						controllers.Application.addLab
-#POST    /addMedication				controllers.Application.addMedication
-#POST    /addNote					controllers.Application.addNote
+#POST    /addLab						    controllers.Application.addLab
+#POST    /addMedication				        controllers.Application.addMedication
+#POST    /addNote					        controllers.Application.addNote
 
-#POST    /addDoctor                	controllers.Application.addDoctor
+#POST    /addDoctor                	        controllers.Application.addDoctor
 
-#POST    /addToDo                  	controllers.Application.addAddToDo
-#POST    /updateToDo  				controllers.Application.updateToDo
-#POST    /move/todo/doing/:todoId  	controllers.Application.changeToDo(1,2,toDoId: Long)
-#POST    /move/todo/done/:todoId  	controllers.Application.changeToDo(1,3,toDoId: Long)
-#POST    /move/doing/done/:todoId  	controllers.Application.changeToDo(2,3,toDoId: Long)
-#POST    /move/doing/todo/:todoId  	controllers.Application.changeToDo(2,1,toDoId: Long)
-#POST    /move/done/doing/:todoId  	controllers.Application.changeToDo(3,2,toDoId: Long)
-#POST    /remove/done/:todoId  		controllers.Application.removeToDo(todoId: Long)
+GET      /todos                             controllers.Application.listTodos
+#POST    /addToDo                  	        controllers.Application.addAddToDo
+#POST    /updateToDo  				        controllers.Application.updateToDo
+#POST    /move/todo/doing/:todoId  	        controllers.Application.changeToDo(1,2,toDoId: Long)
+#POST    /move/todo/done/:todoId  	        controllers.Application.changeToDo(1,3,toDoId: Long)
+#POST    /move/doing/done/:todoId  	        controllers.Application.changeToDo(2,3,toDoId: Long)
+#POST    /move/doing/todo/:todoId  	        controllers.Application.changeToDo(2,1,toDoId: Long)
+#POST    /move/done/doing/:todoId  	        controllers.Application.changeToDo(3,2,toDoId: Long)
+#POST    /remove/done/:todoId  		        controllers.Application.removeToDo(todoId: Long)
 #used for note sharing between doctors
 #POST    /addDoctortoTodo/:todoId/:doctorId	controllers.Application.addDoctorToDo(todoId: Long, doctorId: Long)
-#GET     /Lab/:doctorId				controllers.Application.getLabForDoctor(doctorId: Long)
+#GET     /Lab/:doctorId				        controllers.Application.getLabForDoctor(doctorId: Long)
 
 #Assign a doctor in Lab so that the other doctor knows who is working on it
-#GET     /observations               controllers.Application.Observation
+#GET     /observations                      controllers.Application.Observation
 
 # Map static resources from the /public folder to the /assets URL path
-GET     /assets/*file               controllers.Assets.at(path="/public", file)
+GET     /assets/*file                       controllers.Assets.at(path="/public", file)

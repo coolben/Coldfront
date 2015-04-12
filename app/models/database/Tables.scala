@@ -89,8 +89,8 @@ case class Observation(id: Int, text:String)
 class Observations(tag: Tag) extends Table[Observation](tag, "OBSERVATIONS"){
   def id = column[Int]("OBSERVATION_ID", O.PrimaryKey)
   def text = column[String]("TEXT")
-  def state = column[Int]("STATE")
-  def * = (id, text, state) <> (Observation.tupled, Observation.unapply)
+
+  def * = (id, text) <> (Observation.tupled, Observation.unapply)
 }
   
 case class User(id: Int, username: String)
