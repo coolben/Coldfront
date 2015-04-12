@@ -8,14 +8,14 @@ import org.joda.time.LocalDateTime
 import org.joda.time.DateTime
 
 // Patients table
-case class Patient(nameFirst: String, nameLast: String, id: Option[Long] = None)
+case class Patient(id: Long, nameFirst: String, nameLast: String)
 class Patients(tag: Tag) extends Table[Patient](tag, "PATIENTS") {
   //Primary key column
-  def id = column[Long]("PATIENT_ID", O.PrimaryKey, O.AutoInc)
+  def id = column[Long]("PATIENT_ID", O.PrimaryKey)
   def nameFirst = column[String]("NAME_FIRST")
   def nameLast = column[String]("NAME_LAST")
   
-  def * = (nameFirst, nameLast, id.?) <> (Patient.tupled, Patient.unapply)
+  def * = (id, nameFirst, nameLast) <> (Patient.tupled, Patient.unapply)
   //def * : ProvenShape[(Int, String, String)] = 
     //(id, nameFirst, nameLast)
 }

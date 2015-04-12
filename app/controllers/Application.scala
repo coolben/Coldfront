@@ -30,7 +30,8 @@ object Application extends Controller {
         "nameLast" -> patient.nameLast
     )
   }
-  implicit val patientReads: Reads[(String, String)] = (
+  implicit val patientReads: Reads[(String, String, String)] = (
+    (__ \ "id").read[String] ~
     ((__ \ "content" \ "name" )(0)\ "given")(0).read[String] ~
     ((__ \ "content" \ "name" )(0)\ "family")(0).read[String]
   ).tupled
@@ -53,8 +54,8 @@ object Application extends Controller {
 
     (patients.ddl ++ todos.ddl).create
     // Insert some fake data
-    patients += Patient("Doe", "John")
-    patients += Patient("Doe", "Jane")
+    patients += Patient(1, "Doe", "John")
+    patients += Patient(2, "Doe", "Jane")
     // users += User(1, "vu")
     // users += User(2, "john")
     todos += Todo(1, 1, "Replace catheter", 0)
@@ -76,10 +77,10 @@ object Application extends Controller {
     patientWS.map {
       case Success(json) => {
         val entries = (json \ "entry").as[JsArray]
-        val people = (entries).as[List[(String, String)]]
+        val people = (entries).as[List[(String, String, String)]]
         for (person <- people) {
           db.withSession { implicit session =>
-            patients += Patient(person._1, person._2)
+            patients += Patient(person._1.split("/").last.toLong, person._2, person._3)
           }
         }
       }
