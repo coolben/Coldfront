@@ -36,7 +36,7 @@ class Orders(tag: Tag) extends Table[Order](tag, "ORDERS") {
     //(id, patientID,  description, location, complete, dtDue, dtCompleted)
   
   def patient: ForeignKeyQuery[Patients, Patient] =
-    foreignKey("PATIENT_FK", patientId, TableQuery[Patients])(_.id)
+    foreignKey("PATIENT_ORDERS_FK", patientId, TableQuery[Patients])(_.id)
 }
   
 case class Lab(id: Int, description: String)
@@ -62,19 +62,35 @@ class Notes(tag: Tag) extends Table[Note](tag, "NOTES"){
   def * = (id, text) <> (Note.tupled, Note.unapply)
 }
 
-case class Todo(id: Int, text: String)
+case class Todo(id: Int, patientId:Int, text: String, state: Int)
 class Todos(tag: Tag) extends Table[Todo](tag, "TODOS"){
   def id = column[Int]("TODO_ID", O.PrimaryKey)
+  def patientId = column[Int]("PATIENT_ID")
   def text = column[String]("TEXT")
-  
-  def * = (id, text) <> (Todo.tupled, Todo.unapply)
+
+  /*********
+    * State Column will hold the current state of the todo
+    * Leaving a gap between In Progress and Done in case we
+    * need more states
+    *  0:   New
+    *  1:   In Progress
+    *  100: Done
+    * -1:   Removed from list
+    */
+  def state = column[Int]("STATE")
+
+  def * = (id, patientId, text, state) <> (Todo.tupled, Todo.unapply)
+
+  def patient: ForeignKeyQuery[Patients, Patient] =
+    foreignKey("PATIENT_TODOS_FK", patientId, TableQuery[Patients])(_.id)
 }
 
 case class Observation(id: Int, text:String)
 class Observations(tag: Tag) extends Table[Observation](tag, "OBSERVATIONS"){
   def id = column[Int]("OBSERVATION_ID", O.PrimaryKey)
   def text = column[String]("TEXT")
-  def * = (id, text) <> (Observation.tupled, Observation.unapply)
+  def state = column[Int]("STATE")
+  def * = (id, text, state) <> (Observation.tupled, Observation.unapply)
 }
   
 case class User(id: Int, username: String)

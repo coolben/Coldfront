@@ -42,10 +42,11 @@ object Application extends Controller {
     // Create the schema
     //(users.ddl ++ patients.ddl ++ todos.ddl).create
 
-    (patients.ddl).create
+    (patients.ddl ++ todos.ddl).create
     // Insert some fake data
     //users += User(1, "vu")
     //users += User(2, "john")
+    todos +=
 
     val patientWS = WS.url(baseUrl + "Patient?_format=json").get().map {
       results =>
