@@ -120,10 +120,14 @@ object Application extends Controller {
   }
 
   def changeTodoState(todoId: Long, state: Int) = Action{
-    db.withSession { implicit session =>
-      val q = for { t <- todos if t.id === todoId} yield t.state
-      q.update(state).run
-      Ok(s"$todoId state set to $state") 
+    try {
+      db.withSession { implicit session =>
+        val q = for {t <- todos if t.id === todoId} yield t.state
+        q.update(state).run
+        Ok(s"$todoId state set to $state")
+      }
+    } catch {
+        case _ => BadRequest(s"Error: $todoId state not changed.")
     }
   }
 
