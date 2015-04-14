@@ -53,7 +53,8 @@ app.controller('PatientController',  function($scope,$http) {
 	*/
 	var responsePromise = $http({
       method: 'GET',
-	    url: "http://fhirtest.uhn.ca/baseDstu1/Patient?_format=json",
+	    //url: "http://fhirtest.uhn.ca/baseDstu1/Patient?_format=json",
+		url: "http://fhir.healthintersections.com.au/open/Patient?_format=json",
       headers: {'Content-Type':  "application/x-www-form-urlencoded; charset=utf-8"}
     });
 
@@ -64,8 +65,8 @@ app.controller('PatientController',  function($scope,$http) {
       	patient['id'] = data.entry[i].id;
       	patient['name'] = data.entry[i].content.name[0].given[0] + " " + data.entry[i].content.name[0].family[0];
       	patient['MRN'] = data.entry[i].id;
-		//patient['MRN'] = /\\(\d+)/.data[i].id;
-      	//console.log(patient.MRN);
+		patient['MRN'] = data.entry[i].id.match(/Patient\/([^]*)/)[1];
+      	console.log(patient.MRN);
       	patient['dob'] = data.entry[i].content.birthDate;
       	patient['from'] = "7 South";
       	patient['primary'] = "Headache";
