@@ -166,7 +166,7 @@ app.controller('PatientController',  function($scope,$http) {
 	}
  });
 
-app.controller('PatientDetailsController',function($scope){
+app.controller('PatientDetailsController',function($scope, $http, $attrs){
 
     //Use FHIR.js or another js package to load data
     $scope.patientDetails = {"firstName": "Akshar",
@@ -174,6 +174,196 @@ app.controller('PatientDetailsController',function($scope){
                                 "address": "302, 10th St., Atlanta",
                                 "email": "akshar@iamsick.com",
                                 "phone": "(302) 303 3030"};
+
+    var id = "108";
+    var patient = {};
+
+    //////////////////////////////////////////////////////////////////////////////////
+    //			Below two methods get all personal details for the patient          //
+    //////////////////////////////////////////////////////////////////////////////////
+    var responsePromise = $http({
+      method: 'GET',
+	    //url: "http://fhirtest.uhn.ca/baseDstu1/Patient?_format=json",
+		url: "http://fhir.healthintersections.com.au/open/Patient?_format=json&_id=" + id,
+      headers: {'Content-Type':  "application/x-www-form-urlencoded; charset=utf-8"}
+    });
+
+    responsePromise.success(function(data, status, headers, config)  {
+      //console.log(data);
+      patient = data.entry[0].content;
+      console.log(patient);
+      console.log(patient.name[0].given[0] + patient.name[0].family[0]);      
+    });    
+
+    //////////////////////////////////////////////////////////////////////////////////
+    //    Below two methods get all lab tests/observation details for the patient   //
+    //////////////////////////////////////////////////////////////////////////////////
+    var observations = {};
+    var availableTests = {};
+
+    availableTests['codes'] = [];
+    availableTests['data'] = [];
+    availableTests['notes'] = [];
+
+    var responsePromise = $http({
+      method: 'GET',
+	    //url: "http://fhirtest.uhn.ca/baseDstu1/Patient?_format=json",
+		url: "http://fhir.healthintersections.com.au/open/Observation?_format=json&id=" + id,
+      headers: {'Content-Type':  "application/x-www-form-urlencoded; charset=utf-8"}
+    });
+
+    responsePromise.success(function(data, status, headers, config)  {
+      //console.log(data);
+      observations = data.entry;
+
+      //Loop through all observations and sort by lab tests(data) and notes
+      for(var i = 0; i < parseInt(data.totalResults); i++) {      	
+      	var index = availableTests.codes.indexOf(observations[i].content.name.coding[0].code);
+
+      	//Check of there is already an  observation with the same code
+      	//If there isn't, add a new observation entry
+        if(index == -1) { 		  
+ 		  var document = {};
+ 		  document['tests'] = [];
+ 		  var tests = {};
+          console.log(i);
+
+          //Add the code to the list of known codes
+ 		  availableTests.codes.push(observations[i].content.name.coding[0].code);
+
+ 		  //Add the code and display names to the new observation
+ 		  //This data is irrespective of whether the observation is a test or a note
+          document.obsCode = observations[i].content.name.coding[0].code;
+ 		  document.obsName = observations[i].content.name.coding[0].display;
+
+ 		  //Check if the observation is a test
+ 		  if (observations[i].content.valueQuantity != undefined) {
+ 		    document.obsUnit = observations[i].content.valueQuantity.units;
+ 		    tests.value = observations[i].content.valueQuantity.value; 		    
+ 		  }
+ 		  //If there are no lab test values, this observation is considered as a note
+ 		  else if (observations[i].content.valueString != undefined) {
+ 		  	tests.value = observations[i].content.valueString; 		  		 
+ 		  }
+
+ 		  //Check if there is a time that the test was issued or published and add it to the entry
+ 		  if (observations[i].content.issued != undefined) { 		    
+		    tests.obsDate = observations[i].content.issued.match(/([^]*)T/)[1];
+		  }
+		  else if (observations[i].content.published != undefined) {
+	        tests.obsDate = observations[i].content.published.match(/([^]*)T/)[1];
+		  }
+		  else {
+		    tests.obsDate = "No date found.";
+		  }
+ 		  document.tests.push(tests);
+
+ 		  //Check if this was a lab test or a note and push accordingly
+ 		  if (observations[i].content.valueQuantity != undefined) {
+ 		    availableTests.data.push(document);  		    
+ 		  }
+ 		  else {
+ 		  	availableTests.notes.push(document);
+ 		  }
+        }
+
+ 		//If there is already an entry for the current observation code, 
+ 		//update the observation list with the values for the new entry
+        else {          
+          var code = observations[i].content.name.coding[0].code;
+          var tests = {};	
+          var document = {};
+          document['tests'] = [];
+
+          //Check if this observation is a note or a lab test
+          if (observations[i].content.valueString != undefined) {
+            //If it is a note, check if there is another note for the same condition
+            if (availableTests.data.indexOf(code) == -1) {
+              //If there is a note already, then just append the new note and the date of the new note
+              index = availableTests.notes.indexOf(code);
+              tests.value = observations[i].content.valueString;
+
+              //Check if there is a time that the test was issued or published and add it to the entry
+              if (observations[i].content.issued != undefined) { 		    
+		        tests.obsDate = observations[i].content.issued.match(/([^]*)T/)[1];
+		      }
+		      else if (observations[i].content.published != undefined) {
+	            tests.obsDate = observations[i].content.published.match(/([^]*)T/)[1];
+		      }
+		      else {
+		        tests.obsDate = "No date found.";
+		      }
+
+		      availableTests.notes[index].tests.push(tests);
+            }          	
+
+            else {
+              //If this is a note for a new condition, add a new entry to the notes
+              document.obsCode = observations[i].content.name.coding[0].code;
+ 		      document.obsName = observations[i].content.name.coding[0].display;
+ 		      tests.value = observations[i].content.valueString;
+
+ 		      //Check if there is a time that the test was issued or published and add it to the entry
+              if (observations[i].content.issued != undefined) { 		    
+		        tests.obsDate = observations[i].content.issued.match(/([^]*)T/)[1];
+		      }
+		      else if (observations[i].content.published != undefined) {
+	            tests.obsDate = observations[i].content.published.match(/([^]*)T/)[1];
+		      }
+		      else {
+		        tests.obsDate = "No date found.";
+		      }
+              
+              document.tests.push(tests);
+		      availableTests.notes.push(document);
+            }
+          	
+          }
+
+          //If it is not a note, and the data already exists
+          //append the new data to the test in the observation list
+          else {
+          	index = availableTests.data.indexOf(code);
+
+          	//Populate the test values if available, else make it 0
+          	if (observations[i].content.valueQuantity != undefined) {
+ 		      tests.value = observations[i].content.valueQuantity.value; 		    
+ 		    }
+ 		    else {
+ 		      tests.value = "0";
+ 		    }
+
+            //Check if there is a time that the test was issued or published and add it to the entry
+            if (observations[i].content.issued != undefined) { 		    
+		      tests.obsDate = observations[i].content.issued.match(/([^]*)T/)[1];
+		    }
+		    else if (observations[i].content.published != undefined) {
+	          tests.obsDate = observations[i].content.published.match(/([^]*)T/)[1];
+		    }
+		    else {
+		      tests.obsDate = "No date found.";
+		    }
+          }
+        }         
+      }     
+      console.log("available tests");
+      console.log(availableTests);
+    });    
+								
+	// var data = [4, 8, 15, 16, 23, 42];
+	
+	// var w=960,h=500;		 
+	
+	// var x = d3.scale.linear()
+ //    .domain([0, d3.max(data)])
+ //    .range([0, 420]); 
+	 
+	// d3.select(".chart")
+	//   .selectAll("div")
+	// 	.data(data)
+	//   .enter().append("div")
+	// 	.style("width", function(d) { return d * 10 + "px"; })
+	// 	.text(function(d) { return d; });
 });
 
 app.controller('TaskController',function($scope){

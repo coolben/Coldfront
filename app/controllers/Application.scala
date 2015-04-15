@@ -153,7 +153,7 @@ object Application extends Controller {
   }
 
   def getPatientViews(patientId: Long) = Action {
-    Ok(views.html.patientView("hello"))
+    Ok(views.html.patientView(patientId))
   }
 
 }

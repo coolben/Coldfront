@@ -1,4 +1,4 @@
-@(message: String)
+@(id: Long)
 
 <html>
 <!--<script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>-->
@@ -12,7 +12,8 @@
   <!--Angular-->
   <script src="@routes.Assets.at("bower_components/angular/angular.js")" charset="utf-8"></script>
   <script src="@routes.Assets.at("bower_components/angular-route/angular-route.js")"></script>
-	<script src="@routes.Assets.at("bower_components/ng-polymer-elements/ng-polymer-elements.min.js")"></script>
+  <script src="http://d3js.org/d3.v3.min.js"></script>
+  <script src="@routes.Assets.at("bower_components/ng-polymer-elements/ng-polymer-elements.min.js")"></script>
 
 
   <script src="@routes.Assets.at("js/script.js")" charset="utf-8"></script>
@@ -103,7 +104,7 @@ ul{
 </head>
 <body vertical ng-app="coldfront">
   <div id="details" class="small-12 columns">
-	  <div class='row' ng-controller='PatientDetailsController'>
+	  <div class='row' ng-controller='PatientDetailsController' id=id>
 	  <h2>Patient Chart: {{patientDetails.firstName}} {{patientDetails.lastName}} </h2>
 	  <div class ='small-12 columns' style="margin-top:50px">
 			<paper-shadow class='card large-4  medium-6 small-12 columns' z="1">
@@ -175,6 +176,19 @@ ul{
         </core-pages>
 	    
 	    </div>
+	  </div>
+	  <style>
+	  .chart div {
+		  font: 10px sans-serif;
+		  background-color: steelblue;
+		  text-align: right;
+		  padding: 3px;
+		  margin: 1px;
+		  color: white;
+		}
+	  </style>
+	  <div id="chart">
+	    
 	  </div>
   </div>
 
