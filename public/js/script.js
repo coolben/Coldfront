@@ -53,8 +53,8 @@ app.controller('PatientController',  function($scope,$http) {
 	*/
 	var responsePromise = $http({
       method: 'GET',
-	    //url: "http://fhirtest.uhn.ca/baseDstu1/Patient?_format=json",
-		url: "http://fhir.healthintersections.com.au/open/Patient?_format=json",
+	    url: "http://fhirtest.uhn.ca/baseDstu1/Patient?_format=json",
+		//url: "http://fhir.healthintersections.com.au/open/Patient?_format=json",
       headers: {'Content-Type':  "application/x-www-form-urlencoded; charset=utf-8"}
     });
 
@@ -175,7 +175,7 @@ app.controller('PatientDetailsController',function($scope, $http, $attrs){
                                 "email": "akshar@iamsick.com",
                                 "phone": "(302) 303 3030"};
 
-    var id = "108";
+    var id = "18066";
     var patient = {};
 
     //////////////////////////////////////////////////////////////////////////////////
@@ -183,8 +183,8 @@ app.controller('PatientDetailsController',function($scope, $http, $attrs){
     //////////////////////////////////////////////////////////////////////////////////
     var responsePromise = $http({
       method: 'GET',
-	    //url: "http://fhirtest.uhn.ca/baseDstu1/Patient?_format=json",
-		url: "http://fhir.healthintersections.com.au/open/Patient?_format=json&_id=" + id,
+	    url: "http://fhirtest.uhn.ca/baseDstu1/Patient?_format=json&_id=" + id,
+		//url: "http://fhir.healthintersections.com.au/open/Patient?_format=json&_id=" + id,
       headers: {'Content-Type':  "application/x-www-form-urlencoded; charset=utf-8"}
     });
 
@@ -207,34 +207,43 @@ app.controller('PatientDetailsController',function($scope, $http, $attrs){
 
     var responsePromise = $http({
       method: 'GET',
-	    //url: "http://fhirtest.uhn.ca/baseDstu1/Patient?_format=json",
-		url: "http://fhir.healthintersections.com.au/open/Observation?_format=json&id=" + id,
+	    url: "http://fhirtest.uhn.ca/baseDstu1/Observation?_format=json&subject._id=" + id,
+		//url: "http://fhir.healthintersections.com.au/open/Observation?_format=json&id=" + id,
       headers: {'Content-Type':  "application/x-www-form-urlencoded; charset=utf-8"}
     });
 
     responsePromise.success(function(data, status, headers, config)  {
-      //console.log(data);
+      console.log(data);
       observations = data.entry;
 
       //Loop through all observations and sort by lab tests(data) and notes
-      for(var i = 0; i < parseInt(data.totalResults); i++) {      	
-      	var index = availableTests.codes.indexOf(observations[i].content.name.coding[0].code);
-
+      for(var i = 0; i < observations.length; i++) {      	
+      	var code = -1;
+      	var index = -1;
+      	console.log(i);
+      	if (observations[i].content.name != undefined) {
+      	  index = availableTests.codes.indexOf(observations[i].content.name.coding[0].code);
+      	  code = observations[i].content.name.coding[0].code;
+      	  console.log("in if");    	 
+      	}
+      	console.log(index + " " + code);
       	//Check of there is already an  observation with the same code
       	//If there isn't, add a new observation entry
         if(index == -1) { 		  
  		  var document = {};
  		  document['tests'] = [];
  		  var tests = {};
-          console.log(i);
+          //console.log(i);
 
           //Add the code to the list of known codes
- 		  availableTests.codes.push(observations[i].content.name.coding[0].code);
+ 		  availableTests.codes.push(code);
 
  		  //Add the code and display names to the new observation
  		  //This data is irrespective of whether the observation is a test or a note
-          document.obsCode = observations[i].content.name.coding[0].code;
- 		  document.obsName = observations[i].content.name.coding[0].display;
+          document.obsCode = code;
+          if (code != -1) {
+ 		    document.obsName = observations[i].content.name.coding[0].display;
+ 		  }
 
  		  //Check if the observation is a test
  		  if (observations[i].content.valueQuantity != undefined) {
@@ -270,7 +279,7 @@ app.controller('PatientDetailsController',function($scope, $http, $attrs){
  		//If there is already an entry for the current observation code, 
  		//update the observation list with the values for the new entry
         else {          
-          var code = observations[i].content.name.coding[0].code;
+          //var code = observations[i].content.name.coding[0].code;
           var tests = {};	
           var document = {};
           document['tests'] = [];
@@ -324,10 +333,11 @@ app.controller('PatientDetailsController',function($scope, $http, $attrs){
           //append the new data to the test in the observation list
           else {
           	index = availableTests.data.indexOf(code);
-
+          	//console.log(index);
           	//Populate the test values if available, else make it 0
           	if (observations[i].content.valueQuantity != undefined) {
  		      tests.value = observations[i].content.valueQuantity.value; 		    
+ 		      //console.log(tests.value);
  		    }
  		    else {
  		      tests.value = "0";
@@ -342,7 +352,8 @@ app.controller('PatientDetailsController',function($scope, $http, $attrs){
 		    }
 		    else {
 		      tests.obsDate = "No date found.";
-		    }
+		    }		    
+		    availableTests.data[index].tests.push(tests);
           }
         }         
       }     
