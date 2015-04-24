@@ -174,7 +174,7 @@ ul{
 	  <div>
 
 	  <div class='row' ng-controller='TaskController'>
-	  				<div class='large-3 columns' style="background:#E0F7FA;min-height:600px;padding:0px">
+	  				<div class='large-3 columns' style="background:#E0F7FA;min-height:100%;padding:0px">
 	  				<paper-shadow  z='1' class='header-1 small-12 ' style='margin-bottom:10px;background:#E0F7FA'>
 	  					<div class=''>Patients</div>
 	  					</paper-shadow>
@@ -227,7 +227,7 @@ ul{
 							</paper-shadow>														
 							</div>
 							</div>
-	  				<div class='large-3 columns' style="background:#B2EBF2;min-height:600px;padding:0px">
+	  				<div class='large-3 columns' style="background:#B2EBF2;min-height:100%;padding:0px">
 	  					<paper-shadow  z='1' class='header-1 small-12 ' style='margin-bottom:10px;background:#B2EBF2'>
 	  						<div class=''>To Do</div>
 	  					</paper-shadow>
@@ -236,13 +236,13 @@ ul{
 							<paper-shadow  z='1' class='card small-10 small-offset-1 columns' style='min-height:100px;margin-bottom:40px;padding:10px;background:#fff'>
 								{{todo}}<br/>
 								<div style='position:absolute;bottom:5px;font-size:0.8em'>
-									<a herf="#" ng-click="moveFromTodoToDoing($index)">Mark as Doing</a> | <a herf="#" ng-click="moveFromTodoToDone($index)">Mark as Done</a>
+									<a herf="#" ng-click="moveToDoing($index, &quot;todo&quot;)">Mark as Doing</a> | <a herf="#" ng-click="moveToDone($index, &quot;todo&quot;)">Mark as Done</a> | <a herf="#" ng-click="editNote($index, &quot;todo&quot;)">Edit Note</a>
 								</div>
 							</paper-shadow>
 							</div>
 							</div>
 	  				</div>
-	  				<div class='large-3 columns' style="background:#80DEEA;min-height:600px;padding:0px">
+	  				<div class='large-3 columns' style="background:#80DEEA;min-height:100%;padding:0px">
 	  				<paper-shadow  z='1' class='header-1 small-12 ' style='margin-bottom:10px;background:#80DEEA'>
 	  					<div class=''>In Progress</div>
 	  					</paper-shadow>	  				
@@ -251,13 +251,13 @@ ul{
 							<paper-shadow  z='1' class='card small-10 small-offset-1 columns' style='min-height:100px;margin-bottom:40px;padding:10px;background:#fff'>
 								{{doing}}<br />
 								<div style='position:absolute;bottom:5px;font-size:0.8em'>
-									<a herf="#"  ng-click="moveFromDoingToTodo($index)">Mark as To Do</a> | <a herf="#" ng-click="moveFromDoingToDone($index)">Mark as Done</a>
+									<a herf="#"  ng-click="moveToTodo($index, &quot;doing&quot;)">Mark as To Do</a> | <a herf="#" ng-click="moveToDone($index, &quot;doing&quot;)">Mark as Done</a> | <a herf="#" ng-click="editNote($index, &quot;doing&quot;)">Edit Note</a>
 								</div>
 							</paper-shadow>		
 							</div>
 							</div>
 	  				</div>
-	  				<div class='large-3 columns' style="background:#4DD0E1;min-height:600px;padding:0px">
+	  				<div class='large-3 columns' style="background:#4DD0E1;min-height:100%;padding:0px">
 							<paper-shadow  z='1' class='header-1 small-12 ' style='margin-bottom:10px;background:#4DD0E1'>
 	  					<div class=''>Done</div>
 	  					</paper-shadow>	  				
@@ -266,7 +266,7 @@ ul{
 							<paper-shadow  z='1' class='card small-10 small-offset-1 columns' style='min-height:100px;margin-bottom:40px;padding:10px;background:#fff'>
 								{{done}}<br />
 								<div style='position:absolute;bottom:5px;font-size:0.8em'>
-									<a herf="#" ng-click="moveBackToDoing($index)">Move back to Doing</a> | <a herf="#" ng-click='removeFromDone($index)'>Remove from List</a>
+									<a herf="#" ng-click="moveToDoing($index, &quot;done&quot;)">Move back to Doing</a> | <a herf="#" ng-click='removeFromDone($index, &quot;done&quot;)'>Remove from List</a> | <a herf="#" ng-click='editNote($index, &quot;done&quot;)'>Edit Note</a>
 								</div>
 							</paper-shadow>		
 							</div>

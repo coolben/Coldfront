@@ -366,33 +366,45 @@ app.controller('PatientDetailsController',function($scope, $http, $attrs){
 	// 	.text(function(d) { return d; });
 });
 
-app.controller('TaskController',function($scope){
+function listHelper($scope, from) {
+	switch(from) {
+		case "todo":
+			return $scope.todos;
+		case "doing":
+			return $scope.doings;
+		case "done":
+			return $scope.dones;
+	}
+};
 
+app.controller('TaskController',function($scope){
 	$scope.todos=["Replace Mr Foley's cathater","Cure the Patients"];
 	$scope.doings=["Check respirator labs","Check crocin order"];
 	$scope.dones=["Meet My Friends"];
-	$scope.removeFromDone=function(id){
-		    $scope.dones.splice(id, 1);
+	
+	
+	$scope.moveToDoing=function(id, from){
+			list = listHelper($scope, from);
+			$scope.doings.push(list.splice(id, 1)[0]);
 	}
-	$scope.moveBackToDoing=function(id){
-		    var x=$scope.dones.splice(id, 1);
-			$scope.doings.push(x[0]);
+	$scope.moveToDone=function(id, from){
+			list = listHelper($scope, from);
+			$scope.dones.push(list.splice(id, 1)[0]);
 	}
-	$scope.moveFromDoingToDone=function(id){
-		    var x=$scope.doings.splice(id, 1);
-		    $scope.dones.push(x[0]);
-	}	
-	$scope.moveFromTodoToDoing=function(id){
-		    var x=$scope.todos.splice(id, 1);
-		    $scope.doings.push(x[0]);
-	}		
-	$scope.moveFromTodoToDone=function(id){
-		    var x=$scope.todos.splice(id, 1);
-		    $scope.dones.push(x[0]);
-	}	
-	$scope.moveFromDoingToTodo=function(id){
-		    var x=$scope.doings.splice(id, 1);
-		    $scope.todos.push(x[0]);		
+	$scope.moveToTodo=function(id, from){
+			list = listHelper($scope, from);
+			$scope.todos.push(list.splice(id, 1)[0]);	
+	}
+	$scope.removeFromDone=function(id, from){
+			list = listHelper($scope, from);
+			list.splice(id, 1);
+	}
+	
+	$scope.editNote=function(id, from){
+		    list = listHelper($scope, from);
+			taskItem = list.splice(id, 1)[0];
+		    var editedNote = prompt("Please edit your note", taskItem);		
+			list.push(editedNote);		
 	}
 });
 
@@ -405,3 +417,5 @@ app.controller('OtherController',function($scope){
 
     $scope.labs = [{"text": "lab 1", "result": "result text", "created": "3/5/2015","values":[{"name":"WBC Count","val":"6.7","range":"4.5-11.0","units":"K/UL"},{"name":"RBC Count","val":"5.7","range":"3.5-5.50","units":"MIL/UL"}]}];
 });
+
+
