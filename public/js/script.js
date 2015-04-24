@@ -399,12 +399,19 @@ app.controller('TaskController',function($scope){
 			list = listHelper($scope, from);
 			list.splice(id, 1);
 	}
-	
 	$scope.editNote=function(id, from){
 		    list = listHelper($scope, from);
 			taskItem = list.splice(id, 1)[0];
-		    var editedNote = prompt("Please edit your note", taskItem);		
-			list.push(editedNote);		
+		    var editedNote = prompt("Please edit your note", taskItem);
+			if (editedNote != null) {
+				list.push(editedNote);
+			} else {
+				list.push(taskItem);		
+			}
+	}
+	$scope.addNewNote=function(){
+		    var newNote = prompt("Please create a new note");		
+			$scope.todos.push(newNote);
 	}
 });
 
