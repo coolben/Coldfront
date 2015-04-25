@@ -19,8 +19,8 @@ GET     /patient/:patientId/observations    controllers.Application.getObservati
 GET     /patientpage/:patientId				controllers.Application.getPatientViews(patientId:Long)
 
 GET     /todos                              controllers.Application.listTodos
-#POST    /addToDo                  	        controllers.Application.addAddToDo
-#POST    /updateToDo  				        controllers.Application.updateToDo
+POST    /addTodo                  	        controllers.Application.addTodo
+POST    /updateTodo  				        controllers.Application.updateTodo
 GET     /move/todo/doing/:todoId  	        controllers.Application.changeTodoState(todoId: Long, state:Int = 1)
 GET     /move/todo/done/:todoId  	        controllers.Application.changeTodoState(todoId: Long, state:Int = 100)
 GET     /move/doing/done/:todoId  	        controllers.Application.changeTodoState(todoId: Long, state:Int = 100)

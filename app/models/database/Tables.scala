@@ -65,7 +65,7 @@ class Notes(tag: Tag) extends Table[Note](tag, "NOTES"){
 
 case class Todo(id: Long, patientId:Long, text: String, state: Int)
 class Todos(tag: Tag) extends Table[Todo](tag, "TODOS"){
-  def id = column[Long]("TODO_ID", O.PrimaryKey)
+  def id = column[Long]("TODO_ID", O.PrimaryKey, O.AutoInc)
   def patientId = column[Long]("PATIENT_ID")
   def text = column[String]("TEXT")
 

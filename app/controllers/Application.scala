@@ -47,6 +47,13 @@ object Application extends Controller {
       "state" -> todo.state
     )
   }
+  
+  implicit val todoReads: Reads[Todo] = (
+      (__ \ "id").read[Long] ~
+      Reads.pure(1.toLong) ~
+      (__ \ "text").read[String] ~
+      Reads.pure(0)
+  )(Todo.apply _)
 
   // The database object -- DB will remain open as long as JVM is running
   val db = Database.forURL("jdbc:h2:mem:coldfront;DB_CLOSE_DELAY=-1", driver = "org.h2.Driver")
@@ -84,7 +91,6 @@ object Application extends Controller {
         val entries = (json \ "entry").as[JsArray]
         val people = (entries).as[List[(String, String, String, String)]]
         for (person <- people) {
-          println(person)
           db.withSession { implicit session =>
             patients += Patient(person._1.split("/").last.toLong, person._2, person._3, person._4)
           }
@@ -135,6 +141,36 @@ object Application extends Controller {
     } catch {
         case _ => BadRequest(s"Error: $todoId state not changed.")
     }
+  }
+
+  def updateTodo = Action(BodyParsers.parse.json) { request =>
+      val todoResult = request.body.validate[Todo]
+      todoResult.fold(
+        errors => {
+          BadRequest("Failed to update note")
+        },
+        todo => {
+          // Update the todo
+          db.withSession { implicit session =>
+            val q = for {t <- todos if t.id === todo.id} yield t.text
+            q.update(todo.text).run
+            Ok("Todo updated")
+          }
+        }
+      )
+  }
+  
+  def addTodo = Action { request =>
+      // Add the todo
+      val body: Option[String] = request.body.asText
+      if (body.isDefined){
+          db.withSession { implicit session =>
+            val todoId = (todos returning todos.map(_.id)) += Todo(0, 1, body.get, 0)
+            Ok(Json.obj("status" ->"OK", "id" -> todoId ))  
+          }
+      } else {
+          BadRequest("Failed to insert note")
+      }
   }
 
   def getConditions(patientId: Long) = Action.async {

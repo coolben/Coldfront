@@ -471,7 +471,8 @@ app.controller('TaskController',function($scope, $http){
 		});
 		moveToDoingPromise.error(function(data){
 			alert("Move to done failed");
-		});	}
+		});	
+	}
 	$scope.moveToTodo=function(id, from){
 		var list = listHelper($scope, from);
 		var todoId = list[id].id;
@@ -485,7 +486,8 @@ app.controller('TaskController',function($scope, $http){
 		});
 		moveToDoingPromise.error(function(data){
 			alert("Move to todo failed");
-		});	}
+		});	
+	}
 	$scope.removeFromDone=function(id, from){
 		var list = listHelper($scope, from);
 		var todoId = list[id].id;
@@ -493,26 +495,48 @@ app.controller('TaskController',function($scope, $http){
 			method: 'GET',
 			url: "/remove/" + from + "/" + todoId,
       		headers: {'Content-Type':  "application/x-www-form-urlencoded; charset=utf-8"}
-		});
-		moveToDoingPromise.success(function(data, status){
+		}).
+		success(function(data, status){
 			list.splice(id, 1);
-		});
-		moveToDoingPromise.error(function(data){
+		}).
+		error(function(data){
 			alert("Remove failed");
-		});	}
+		});	
+	}
 	$scope.editNote=function(id, from){
 	    var list = listHelper($scope, from);
-		var taskItem = list.splice(id, 1)[0];
-	    var editedNote = prompt("Please edit your note", taskItem);
-		if (editedNote != null) {
-			list.push(editedNote);
-		} else {
-			list.push(taskItem);		
-		}
+	    var todoId = list[id].id;
+
+		var newText = prompt("Please edit your note", list[id].text);
+
+	    var editPromise = $http.post('/updateTodo',{
+	    	id: list[id].id,
+	    	text: newText
+	    }).
+	    success(function(data){
+			list[id].text = newText;
+	    }).
+	    error(function(data){
+	    	alert("Update failed");
+	    });
 	}
 	$scope.addNewNote=function(){
 	    var newNote = prompt("Please create a new note");		
-		$scope.todos.push(newNote);
+
+    	var addPromise = $http({
+    		method: 'POST',
+    		url: '/addTodo', 
+    		data: newNote,
+    		headers: {
+    			'Content-Type': 'text/plain'
+    		}
+    	}).
+    	success(function(data){
+    		$scope.todos.push({ id: data.id, text: newNote });
+    	}).
+    	error(function(data){
+    		alert("Insert failed");
+    	});
 	}
 });
 
