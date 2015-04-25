@@ -53,8 +53,8 @@ app.controller('PatientController',  function($scope,$http) {
 	*/
 	var responsePromise = $http({
       method: 'GET',
-	    //url: "http://fhirtest.uhn.ca/baseDstu1/Patient?_format=json",
-		url: "http://fhir.healthintersections.com.au/open/Patient?_format=json",
+	    url: "http://fhirtest.uhn.ca/baseDstu1/Patient?_format=json",
+		//url: "http://fhir.healthintersections.com.au/open/Patient?_format=json",
       headers: {'Content-Type':  "application/x-www-form-urlencoded; charset=utf-8"}
     });
 
@@ -399,41 +399,120 @@ function listHelper($scope, from) {
 	}
 };
 
-app.controller('TaskController',function($scope){
-	$scope.todos=["Replace Mr Foley's cathater","Cure the Patients"];
-	$scope.doings=["Check respirator labs","Check crocin order"];
-	$scope.dones=["Meet My Friends"];
+app.controller('TaskController',function($scope, $http){
+	// $scope.todos=[{ id: 1, text: "Replace Mr Foley's catheter" },
+	// 			  { id: 2, text: "Cure the Patients" }];
+	// $scope.doings=[{ id: 3, text: "Check respirator labs" },
+	// 			   { id: 4, text: "Check crocin order" }];
+	// $scope.dones=[{id: 5, text: "Meet My Friends" }];
+	$scope.todos = [];
+	$scope.doings = [];
+	$scope.dones = [];
+
+	// get the list of todos
+    var todoPromise = $http({
+      method: 'GET',
+	  url: "/todos",
+      headers: {'Content-Type':  "application/x-www-form-urlencoded; charset=utf-8"}
+    });
+
+    todoPromise.success(function(data, status, headers, config)  {
+      console.log(data);
+      for (var i = 0; i < data.length; i++) {
+	    switch(data[i].state) {
+	    	// Todo
+	    	case 0:
+    			$scope.todos.push({ id: data[i].id, text: data[i].text} );
+    			break;
+	    	// Done
+	    	case 100:
+    			$scope.dones.push({ id: data[i].id, text: data[i].text} );
+	    		break;
+	    	case -1:
+	    		break;
+	    	// Doing and default case
+    		case 1:
+    		default:
+    			$scope.doings.push({ id: data[i].id, text: data[i].text} );
+	    		break;
+	    }
+      }
+    });
+    todoPromise.error(function(data, status, headers, config) {
+      alert("GET todos failed!");
+    });
 	
 	
 	$scope.moveToDoing=function(id, from){
-			list = listHelper($scope, from);
+		var list = listHelper($scope, from);
+		var todoId = list[id].id;
+		var moveToDoingPromise = $http({
+			method: 'GET',
+			url: "/move/" + from + "/doing/" + todoId,
+      		headers: {'Content-Type':  "application/x-www-form-urlencoded; charset=utf-8"}
+		});
+		moveToDoingPromise.success(function(data, status){
 			$scope.doings.push(list.splice(id, 1)[0]);
+		});
+		moveToDoingPromise.error(function(data){
+			alert("Move to doing failed");
+		});
 	}
 	$scope.moveToDone=function(id, from){
-			list = listHelper($scope, from);
+		var list = listHelper($scope, from);
+		var todoId = list[id].id;
+		var moveToDoingPromise = $http({
+			method: 'GET',
+			url: "/move/" + from + "/done/" + todoId,
+      		headers: {'Content-Type':  "application/x-www-form-urlencoded; charset=utf-8"}
+		});
+		moveToDoingPromise.success(function(data, status){
 			$scope.dones.push(list.splice(id, 1)[0]);
-	}
+		});
+		moveToDoingPromise.error(function(data){
+			alert("Move to done failed");
+		});	}
 	$scope.moveToTodo=function(id, from){
-			list = listHelper($scope, from);
-			$scope.todos.push(list.splice(id, 1)[0]);	
-	}
+		var list = listHelper($scope, from);
+		var todoId = list[id].id;
+		var moveToDoingPromise = $http({
+			method: 'GET',
+			url: "/move/" + from + "/todo/" + todoId,
+      		headers: {'Content-Type':  "application/x-www-form-urlencoded; charset=utf-8"}
+		});
+		moveToDoingPromise.success(function(data, status){
+			$scope.todos.push(list.splice(id, 1)[0]);
+		});
+		moveToDoingPromise.error(function(data){
+			alert("Move to todo failed");
+		});	}
 	$scope.removeFromDone=function(id, from){
-			list = listHelper($scope, from);
+		var list = listHelper($scope, from);
+		var todoId = list[id].id;
+		var moveToDoingPromise = $http({
+			method: 'GET',
+			url: "/remove/" + from + "/" + todoId,
+      		headers: {'Content-Type':  "application/x-www-form-urlencoded; charset=utf-8"}
+		});
+		moveToDoingPromise.success(function(data, status){
 			list.splice(id, 1);
-	}
+		});
+		moveToDoingPromise.error(function(data){
+			alert("Remove failed");
+		});	}
 	$scope.editNote=function(id, from){
-		    list = listHelper($scope, from);
-			taskItem = list.splice(id, 1)[0];
-		    var editedNote = prompt("Please edit your note", taskItem);
-			if (editedNote != null) {
-				list.push(editedNote);
-			} else {
-				list.push(taskItem);		
-			}
+	    var list = listHelper($scope, from);
+		var taskItem = list.splice(id, 1)[0];
+	    var editedNote = prompt("Please edit your note", taskItem);
+		if (editedNote != null) {
+			list.push(editedNote);
+		} else {
+			list.push(taskItem);		
+		}
 	}
 	$scope.addNewNote=function(){
-		    var newNote = prompt("Please create a new note");		
-			$scope.todos.push(newNote);
+	    var newNote = prompt("Please create a new note");		
+		$scope.todos.push(newNote);
 	}
 });
 

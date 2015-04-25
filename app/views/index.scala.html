@@ -237,7 +237,7 @@ ul{
 	  					<div ng-repeat="todo in todos">
 	  					<div class='row' style="width:100%">
 							<paper-shadow  z='1' class='card small-10 small-offset-1 columns' style='min-height:100px;margin-bottom:40px;padding:10px;background:#fff'>
-								{{todo}}<br/>
+								{{todo.text}}<br/>
 								<div style='position:absolute;bottom:5px;font-size:0.8em'>
 									<a herf="#" ng-click="moveToDoing($index, &quot;todo&quot;)">Mark as Doing</a> | <a herf="#" ng-click="moveToDone($index, &quot;todo&quot;)">Mark as Done</a> | <a herf="#" ng-click="editNote($index, &quot;todo&quot;)">Edit Note</a>
 								</div>
@@ -252,7 +252,7 @@ ul{
 	  					<div ng-repeat="doing in doings">
 							<div class='row' style="width:100%">
 							<paper-shadow  z='1' class='card small-10 small-offset-1 columns' style='min-height:100px;margin-bottom:40px;padding:10px;background:#fff'>
-								{{doing}}<br />
+								{{doing.text}}<br />
 								<div style='position:absolute;bottom:5px;font-size:0.8em'>
 									<a herf="#"  ng-click="moveToTodo($index, &quot;doing&quot;)">Mark as To Do</a> | <a herf="#" ng-click="moveToDone($index, &quot;doing&quot;)">Mark as Done</a> | <a herf="#" ng-click="editNote($index, &quot;doing&quot;)">Edit Note</a>
 								</div>
@@ -267,7 +267,7 @@ ul{
 	  					<div ng-repeat="done in dones">
 							<div class='row' style="width:100%">
 							<paper-shadow  z='1' class='card small-10 small-offset-1 columns' style='min-height:100px;margin-bottom:40px;padding:10px;background:#fff'>
-								{{done}}<br />
+								{{done.text}}<br />
 								<div style='position:absolute;bottom:5px;font-size:0.8em'>
 									<a herf="#" ng-click="moveToDoing($index, &quot;done&quot;)">Move back to Doing</a> | <a herf="#" ng-click='removeFromDone($index, &quot;done&quot;)'>Remove from List</a> | <a herf="#" ng-click='editNote($index, &quot;done&quot;)'>Edit Note</a>
 								</div>

@@ -62,10 +62,12 @@ object Application extends Controller {
     // users += User(1, "vu")
     // users += User(2, "john")
     todos += Todo(1, 1, "Replace catheter", 0)
-    todos += Todo(2, 1, "Check crocin order", 1)
-    todos += Todo(3, 1, "Turn patient", 100)
-    todos += Todo(4, 2, "Oral vent care", 0)
-    todos += Todo(5, 2, "Insert vent", 100)
+    todos += Todo(2, 1, "Players gonna play play play", 100)
+    todos += Todo(3, 1, "haters gonna hate hate hate", 100)
+    todos += Todo(4, 1, "Turn patient", 100)
+    todos += Todo(5, 2, "Shake it off. Shake it off.", 0)
+    todos += Todo(6, 2, "Insert vent", 100)
+    todos += Todo(7, 2, "Oral vent care", 0)
 
 
     val patientWS = WS.url(baseUrl + "Patient?_format=json").get().map {
@@ -81,7 +83,6 @@ object Application extends Controller {
       case Success(json) => {
         val entries = (json \ "entry").as[JsArray]
         val people = (entries).as[List[(String, String, String, String)]]
-        println(people)
         for (person <- people) {
           println(person)
           db.withSession { implicit session =>
