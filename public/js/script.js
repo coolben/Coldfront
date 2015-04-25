@@ -53,8 +53,8 @@ app.controller('PatientController',  function($scope,$http) {
 	*/
 	var responsePromise = $http({
       method: 'GET',
-	    url: "http://fhirtest.uhn.ca/baseDstu1/Patient?_format=json",
-		//url: "http://fhir.healthintersections.com.au/open/Patient?_format=json",
+	    //url: "http://fhirtest.uhn.ca/baseDstu1/Patient?_format=json",
+		url: "http://fhir.healthintersections.com.au/open/Patient?_format=json",
       headers: {'Content-Type':  "application/x-www-form-urlencoded; charset=utf-8"}
     });
 
@@ -80,25 +80,25 @@ app.controller('PatientController',  function($scope,$http) {
 
 
     // Trying to hit local server
-	var patientPromise = $http({
-		method: 'GET',
-		url: "/patients",
-		headers: {'Content-Type':  "application/x-www-form-urlencoded; charset=utf-8"}
-	});
-	patientPromise.success(function(data, status, headers, config){
-		console.log(data);
-		for(var i=0; i < data.length; i++){
-			var patient = {};
-			patient.id = data[i].id;
-			patient.MRN = data[i].id;
-			patient.name = data[i].nameFirst + " " + data[i].nameLast;
-			patient.dob = data[i].dob;
-			patients.push(patient);
-		}
-	});
-	patientPromise.error(function(data, status, headers, config){
-		alert("Request for patient list failed.");
-	});
+	// var patientPromise = $http({
+	// 	method: 'GET',
+	// 	url: "/patients",
+	// 	headers: {'Content-Type':  "application/x-www-form-urlencoded; charset=utf-8"}
+	// });
+	// patientPromise.success(function(data, status, headers, config){
+	// 	console.log(data);
+	// 	for(var i=0; i < data.length; i++){
+	// 		var patient = {};
+	// 		patient.id = data[i].id;
+	// 		patient.MRN = data[i].id;
+	// 		patient.name = data[i].nameFirst + " " + data[i].nameLast;
+	// 		patient.dob = data[i].dob;
+	// 		patients.push(patient);
+	// 	}
+	// });
+	// patientPromise.error(function(data, status, headers, config){
+	// 	alert("Request for patient list failed.");
+	// });
 
 	//set up scope variables
 	$scope.filter=3;
