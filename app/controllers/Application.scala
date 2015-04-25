@@ -27,13 +27,16 @@ object Application extends Controller {
     def writes(patient: Patient) = Json.obj(
         "id" -> patient.id,
         "nameFirst" -> patient.nameFirst,
-        "nameLast" -> patient.nameLast
+        "nameLast" -> patient.nameLast,
+        "dob" -> patient.dob
     )
   }
-  implicit val patientReads: Reads[(String, String, String)] = (
+  
+  implicit val patientReads: Reads[(String, String, String, String)] = (
     (__ \ "id").read[String] ~
-    ((__ \ "content" \ "name" )(0)\ "given")(0).read[String] ~
-    ((__ \ "content" \ "name" )(0)\ "family")(0).read[String]
+    (((__ \ "content" \ "name" )(0)\ "given")(0).read[String] or Reads.pure(""))~
+    (((__ \ "content" \ "name" )(0)\ "family")(0).read[String] or Reads.pure(""))~
+    ((__ \ "content" \ "birthDate").read[String] or Reads.pure(""))
   ).tupled
 
   implicit val todosWrites = new Writes[Todo]{
@@ -54,8 +57,8 @@ object Application extends Controller {
 
     (patients.ddl ++ todos.ddl).create
     // Insert some fake data
-    patients += Patient(1, "Doe", "John")
-    patients += Patient(2, "Doe", "Jane")
+    patients += Patient(1, "Doe", "John", "2005-01-01")
+    patients += Patient(2, "Doe", "Jane", "2004-07-11")
     // users += User(1, "vu")
     // users += User(2, "john")
     todos += Todo(1, 1, "Replace catheter", 0)
@@ -77,10 +80,12 @@ object Application extends Controller {
     patientWS.map {
       case Success(json) => {
         val entries = (json \ "entry").as[JsArray]
-        val people = (entries).as[List[(String, String, String)]]
+        val people = (entries).as[List[(String, String, String, String)]]
+        println(people)
         for (person <- people) {
+          println(person)
           db.withSession { implicit session =>
-            patients += Patient(person._1.split("/").last.toLong, person._2, person._3)
+            patients += Patient(person._1.split("/").last.toLong, person._2, person._3, person._4)
           }
         }
       }
