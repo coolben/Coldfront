@@ -15,7 +15,7 @@ import scala.slick.driver.H2Driver.simple._
 import DB._
 
 object Application extends Controller {
-  val baseUrl = "http://fhirtest.uhn.ca/baseDstu1/"
+  val baseUrl = "http://fhirtest.uhn.ca/baseDstu2/"
 
   // Table Queries for H2 database tables
   val users: TableQuery[Users] = TableQuery[Users]
@@ -33,10 +33,10 @@ object Application extends Controller {
   }
   
   implicit val patientReads: Reads[(String, String, String, String)] = (
-    (__ \ "id").read[String] ~
-    (((__ \ "content" \ "name" )(0)\ "given")(0).read[String] or Reads.pure(""))~
-    (((__ \ "content" \ "name" )(0)\ "family")(0).read[String] or Reads.pure(""))~
-    ((__ \ "content" \ "birthDate").read[String] or Reads.pure(""))
+    (__ \ "resource" \ "id").read[String] ~
+    (((__ \ "resource" \ "name" )(0)\ "given")(0).read[String] or Reads.pure(""))~
+    (((__ \ "resource" \ "name" )(0)\ "family")(0).read[String] or Reads.pure(""))~
+    ((__ \ "resource" \ "birthDate").read[String] or Reads.pure(""))
   ).tupled
 
   implicit val todosWrites = new Writes[Todo]{
@@ -54,6 +54,36 @@ object Application extends Controller {
       (__ \ "text").read[String] ~
       Reads.pure(0)
   )(Todo.apply _)
+
+  case class DiagnosticOrderItem(text:String, code:String)
+  case class DiagnosticOrderEvent(status:String, date:String)
+  case class DiagnosticOrder(
+      id:String, 
+      subject:String, 
+      orderer:String, 
+      status:Option[String],
+      items:Option[List[DiagnosticOrderItem]],
+      events:Option[List[DiagnosticOrderEvent]]
+  )
+  
+  implicit val dOrderItemReads: Reads[DiagnosticOrderItem] = (
+    (__ \ "code" \ "text").read[String] ~
+    (__ \ "code" \ "text").read[String]
+  )(DiagnosticOrderItem.apply _)
+  
+  implicit val dOrderEventReads: Reads[DiagnosticOrderEvent] = (
+    (__ \ "status").read[String] ~
+    (__ \ "dateTime").read[String]
+  )(DiagnosticOrderEvent.apply _)
+  
+  implicit val dOrderReads: Reads[DiagnosticOrder] = (
+    (__ \ "resource" \ "id").read[String] ~
+    ((__ \ "resource" \ "subject" \ "reference").read[String]  or Reads.pure("")) ~
+    ((__ \ "resource" \ "orderer" \ "reference").read[String] or Reads.pure("")) ~
+    (__ \ "resource" \ "status").readNullable[String] ~
+    (__ \ "resource" \ "item").readNullable[List[DiagnosticOrderItem]] ~
+    (__ \ "resource" \ "event").readNullable[List[DiagnosticOrderEvent]]
+  )(DiagnosticOrder.apply _)
 
   // The database object -- DB will remain open as long as JVM is running
   val db = Database.forURL("jdbc:h2:mem:coldfront;DB_CLOSE_DELAY=-1", driver = "org.h2.Driver")
@@ -76,7 +106,27 @@ object Application extends Controller {
     todos += Todo(6, 2, "Insert vent", 100)
     todos += Todo(7, 2, "Oral vent care", 0)
 
+    val orderWS = WS.url(baseUrl + "DiagnosticOrder?_format=json").get().map{
+      results =>
+        Try(
+          if (results.status == 200)
+            (results.json)
+          else
+            throw new Exception(s"Error during request. ${results.status} ${results.body}")
+        )
+    }
+    orderWS.map {
+      case Success(json) => {
+        val entries = (json \ "entry").as[JsArray]
+        println(entries)
+        val orders = (entries).as[Seq[DiagnosticOrder]]
+        for (order <- orders) {
+            println(order)
 
+        }
+      }
+        case Failure(e) => println(s"error: ${e.getMessage}")
+    }
     val patientWS = WS.url(baseUrl + "Patient?_format=json").get().map {
       results =>
         Try(
@@ -92,7 +142,7 @@ object Application extends Controller {
         val people = (entries).as[List[(String, String, String, String)]]
         for (person <- people) {
           db.withSession { implicit session =>
-            patients += Patient(person._1.split("/").last.toLong, person._2, person._3, person._4)
+            patients += Patient(person._1.toLong, person._2, person._3, person._4)
           }
         }
       }
