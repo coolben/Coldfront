@@ -120,10 +120,25 @@ object Application extends Controller {
         val entries = (json \ "entry").as[JsArray]
         val orders = (entries).as[Seq[DiagnosticOrder]]
         for (order <- orders) {
-          if (order.items.isDefined){
+          if (order.status.isDefined && order.items.isDefined){
             for (item <- order.items.get){
-              db.withSession { implicit session =>
-                todos += Todo(0, 1, item.text, 0)
+              val patientId = Try(order.subject.split("/").last.toLong).toOption
+              val state = order.status.get match {
+                case "requested" => 0
+                case "received" => 0
+                case "accepted" => 0
+                case "in progress" => 1
+                case "review" => 1
+                case "completed" => 100
+                case "suspended" => -1
+                case "rejected" => -1
+                case "failed" => -1
+                case _ => 0
+              }
+              if (patientId.isDefined){
+                db.withSession { implicit session =>
+                  todos += Todo(0, patientId.getOrElse(1), item.text, state)
+                }
               }
             }   
           }
