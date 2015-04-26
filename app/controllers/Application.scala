@@ -118,11 +118,15 @@ object Application extends Controller {
     orderWS.map {
       case Success(json) => {
         val entries = (json \ "entry").as[JsArray]
-        println(entries)
         val orders = (entries).as[Seq[DiagnosticOrder]]
         for (order <- orders) {
-            println(order)
-
+          if (order.items.isDefined){
+            for (item <- order.items.get){
+              db.withSession { implicit session =>
+                todos += Todo(0, 1, item.text, 0)
+              }
+            }   
+          }
         }
       }
         case Failure(e) => println(s"error: ${e.getMessage}")
