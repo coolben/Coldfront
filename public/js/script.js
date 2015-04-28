@@ -371,7 +371,7 @@ app.controller('PatientDetailsController',function($scope, $http, $attrs){
       $scope.patientDetails= {"firstName": patient.name[0].given[0],
                                 "lastName": patient.name[0].family[0],
                                 "address": patient.address[0].city+ " " +patient.address[0].zip,
-                                "gender": patient.gender[0].coding[0],
+                                "gender": patient.gender.coding[0].code,
                                 "phone": "(302) 303 3030"};
     });    
 
