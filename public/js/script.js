@@ -197,7 +197,7 @@ app.controller('PatientDetailsController',function($scope, $http, $attrs){
                                 "email": "akshar@iamsick.com",
                                 "phone": "(302) 303 3030"};
 
-    var id = "108";
+    var id = "17565";
     var patient = {};
 
     //////////////////////////////////////////////////////////////////////////////////
@@ -370,6 +370,7 @@ app.controller('PatientDetailsController',function($scope, $http, $attrs){
       }     
       console.log("available tests");
       console.log(availableTests);
+      $scope.availableTests = availableTests;
     });    
 								
 	// var data = [4, 8, 15, 16, 23, 42];
