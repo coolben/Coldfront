@@ -135,13 +135,12 @@ ul{
 				<div  class="row" style="margin-top:20px" >
 				<div class='large-10  large-offset-1 medium-10 medium-offset-1 small-12'>
 					<paper-dialog id="dialog" heading="Patient View">
-					  <p>This app would like to launch a small, unmanned vehicle into space.</p>
 						<hr />
 						<p> MRN: {{mrn}}</p>
 						<p> DOB: {{dob}}</p>
 						<p> Cheif Complaint: {{primary}}</p>
 						<p> Physician: {{physician}}</p>
-					  <paper-button affirmative default autofocus style='background-color:#03A9F4;color:#222' ng-click="closePatientView()">Done</paper-button>
+					  <paper-button raised class='colored' ng-click="closePatientView()">Done</paper-button>
 					  <paper-button affirmative default autofocus style='background-color:#03A9F4;color:#222' >
 					  <a href="patientpage/{{mrn}}" target="_blank">Open in New Tab</a></paper-button>
 					</paper-dialog>						
@@ -178,55 +177,19 @@ ul{
 	  				<paper-shadow  z='1' class='header-1 small-12 ' style='margin-bottom:10px;background:#E0F7FA'>
 	  					<div class=''>Patients</div>
 	  					</paper-shadow>
-	  				<div class='row' >
+	  				<div class='row' ng-repeat="patient in patients">
 							<paper-shadow  z='1' class='card  small-10 small-offset-1  columns' style='margin:10px;margin-bottom:40px;background:#fff'>
 					    	<div class='small-3 columns'>
 					    		<img src='@routes.Assets.at("img/female.png")' style="margin-top:15px;width:50px;height:auto" />
 					    	</div>
 					    	<div class="small-9 columns">
-					    		Carl Saldanha <br />
-					    		Headache <br />
+					    		{{patient.name}}<br />
+					    		{{patient.primary}}<br />
 					    		<a href="#">Notes</a> | <a href="#">Labs</a> | <a href="#">Todos</a>
 					    	</div>
 							</paper-shadow>
 						</div>
-						<div class='row' >
-							<paper-shadow  z='1' class='card  small-10 small-offset-1 columns' style='margin:10px;margin-bottom:40px;background:#fff'>
-					    	<div class='small-3 columns' >
-					    		<img src='@routes.Assets.at("img/female.png")' style="margin-top:15px;width:50px;height:auto" />
-					    	</div>
-					    	<div class="small-9 columns">
-					    		Vu Nguyen <br />
-					    		Headache <br />
-					    		<a href="#">Notes</a> | <a href="#">Labs</a> | <a href="#">Todos</a>
-					    	</div>
-							</paper-shadow>
-						</div>
-						<div class='row' >
-							<paper-shadow  z='1' class='card small-10 small-offset-1 columns' style='margin-bottom:40px;background:#fff'>
-					    	<div class='small-3 columns'>
-					    		<img src='@routes.Assets.at("img/female.png")' style="margin-top:15px;width:50px;height:auto" />
-					    	</div>
-					    	<div class="small-9 columns">
-					    		Ben Nguyen <br />
-					    		Headache <br />
-					    		<a href="#">Notes</a> | <a href="#">Labs</a> | <a href="#">Todos</a>
-					    	</div>
-							</paper-shadow>
-						</div>
-						<div class='row' >
-							<paper-shadow  z='1' class='card  small-10 small-offset-1  columns' style='margin:10px;margin-bottom:40px;background:#fff'>
-					    	<div class='small-3 columns'>
-					    		<img src='@routes.Assets.at("img/female.png")' style="margin-top:15px;width:50px;height:auto" />
-					    	</div>
-					    	<div class="small-9 columns">
-					    		Erik Reinerstein <br />
-					    		Headache <br />
-					    		<a href="#">Notes</a> | <a href="#">Labs</a> | <a href="#">Todos</a>
-					    	</div>
-							</paper-shadow>														
-							</div>
-							</div>
+					</div>
 	  				<div class='large-3 columns' style="background:#B2EBF2;min-height:100%;padding:0px">
 	  					<paper-shadow  z='1' class='header-1 small-12 ' style='margin-bottom:10px;background:#B2EBF2'>
 	  						<div class=''>To Do</div>
