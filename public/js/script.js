@@ -545,6 +545,7 @@ app.controller('PatientDetailsController',function($scope, $http, $attrs){
       console.log("available tests");
       console.log(availableTests);
       $scope.availableTests = availableTests;
+      console.log($scope.availableTests);
     });    
 });
 

@@ -123,7 +123,7 @@ ul{
 			</paper-shadow>
 		</div>
 		</div>
-		<!--<div class='row' ng-controller='OtherController'>-->
+		<div class='row' ng-controller='OtherController'>
 		<div class='large-12  small-12 columns card'>
 	    <paper-shadow  z='1'>
             <paper-tabs selected="{{selected}}">
@@ -136,12 +136,10 @@ ul{
         <core-pages selected="{{selected}}" bind-polymer>
             <div>
 						<paper-shadow class='' z='1' style='min-height:20px'>
-                <div ng-repeat="test in availableTests.data">
-                		<b>Code: {{test.obsCode}}</b><br />
-                    <div ng-repeat="note in test.tests">
-                		    {{note.value}}
-                    </div>
-                    <div class='datetext'>On {{test.obsDate}}</div>
+                <div ng-repeat="note in notes">
+                		<b>{{note.title}}</b><br />
+                    <p>{{note.text}}</p>                    
+                    <div class='datetext'>{{note.createdBy}} on {{note.created}}</div>
                 </div>
 						</paper-shadow>
             </div>
@@ -178,7 +176,7 @@ ul{
         </core-pages>
 	    
 	    </div>
-	  <!--</div>-->
+	  </div>
 	  <style>
 	  .chart div {
 		  font: 10px sans-serif;
