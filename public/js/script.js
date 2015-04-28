@@ -8,7 +8,28 @@ var app=angular.module("coldfront",['ng-polymer-elements'])
     }
 ]);
 
-app.controller('ToolbarController',  function($scope) {
+app.service('patientService', function($http){
+	return {
+		patients: function(patients){
+			var responsePromise = $http({
+      				method: 'GET',
+	    			url: "http://fhirtest.uhn.ca/baseDstu1/Patient?_format=json",
+      				headers: {'Content-Type':  "application/x-www-form-urlencoded; charset=utf-8"}
+    		});
+
+			responsePromise.success(patients);
+
+		    responsePromise.error(function(data, status, headers, config) {
+				alert("AJAX failed!");
+		    });			
+		}
+	
+    }
+
+});
+
+
+app.controller('ToolbarController',  function($scope,patientService) {
 
  	$scope.search=true;
  	$scope.searchfunction=function(){
@@ -22,62 +43,198 @@ app.controller('ToolbarController',  function($scope) {
  });
 
 
-app.controller('PatientController',  function($scope,$http) {
-	var patients = new Array();
+app.controller('TaskController',function($scope, $http,patientService){
+	// $scope.todos=[{ id: 1, text: "Replace Mr Foley's catheter" },
+	// 			  { id: 2, text: "Cure the Patients" }];
+	// $scope.doings=[{ id: 3, text: "Check respirator labs" },
+	// 			   { id: 4, text: "Check crocin order" }];
+	// $scope.dones=[{id: 5, text: "Meet My Friends" }];
+	function listHelper($scope, from) {
+		switch(from) {
+			case "todo":
+				return $scope.todos;
+			case "doing":
+				return $scope.doings;
+			case "done":
+				return $scope.dones;
+		}
+	};
+
+	var patients = [];
+	patientService.patients(function(data, status, headers, config)  {
+		for (var i = 0; i < data.entry.length; i++) {
+		    var patient = {};
+		  	patient['id'] = data.entry[i].id;
+		  	patient['name'] = data.entry[i].content.name[0].given[0] + " " + data.entry[i].content.name[0].family[0];
+		  	patient['MRN'] = data.entry[i].id;
+			patient['MRN'] = data.entry[i].id.match(/Patient\/([^]*)/)[1];
+		  	
+		  	patient['dob'] = data.entry[i].content.birthDate;
+		  	patient['from'] = "7 South";
+				patient['primary'] = "Headache";
+				patient['physician'] = "Dr. Braunstein";
+				patients.push(patient);
+			}
+	});
+	$scope.patients=patients;
+
+	$scope.todos = [];
+	$scope.doings = [];
+	$scope.dones = [];
+//	$scope.patients = patientService.patients;
+
+	// get the list of todos
+    var todoPromise = $http({
+      method: 'GET',
+	  url: "/todos",
+      headers: {'Content-Type':  "application/x-www-form-urlencoded; charset=utf-8"}
+    });
+
+    todoPromise.success(function(data, status, headers, config)  {
+      console.log(data);
+      for (var i = 0; i < data.length; i++) {
+	    switch(data[i].state) {
+	    	// Todo
+	    	case 0:
+    			$scope.todos.push({ id: data[i].id, text: data[i].text} );
+    			break;
+	    	// Done
+	    	case 100:
+    			$scope.dones.push({ id: data[i].id, text: data[i].text} );
+	    		break;
+	    	case -1:
+	    		break;
+	    	// Doing and default case
+    		case 1:
+    		default:
+    			$scope.doings.push({ id: data[i].id, text: data[i].text} );
+	    		break;
+	    }
+      }
+    });
+    todoPromise.error(function(data, status, headers, config) {
+      alert("GET todos failed!");
+    });
+	
+	
+	$scope.moveToDoing=function(id, from){
+		var list = listHelper($scope, from);
+		var todoId = list[id].id;
+		var moveToDoingPromise = $http({
+			method: 'GET',
+			url: "/move/" + from + "/doing/" + todoId,
+      		headers: {'Content-Type':  "application/x-www-form-urlencoded; charset=utf-8"}
+		});
+		moveToDoingPromise.success(function(data, status){
+			$scope.doings.push(list.splice(id, 1)[0]);
+		});
+		moveToDoingPromise.error(function(data){
+			alert("Move to doing failed");
+		});
+	}
+	$scope.moveToDone=function(id, from){
+		var list = listHelper($scope, from);
+		var todoId = list[id].id;
+		var moveToDoingPromise = $http({
+			method: 'GET',
+			url: "/move/" + from + "/done/" + todoId,
+      		headers: {'Content-Type':  "application/x-www-form-urlencoded; charset=utf-8"}
+		});
+		moveToDoingPromise.success(function(data, status){
+			$scope.dones.push(list.splice(id, 1)[0]);
+		});
+		moveToDoingPromise.error(function(data){
+			alert("Move to done failed");
+		});	
+	}
+	$scope.moveToTodo=function(id, from){
+		var list = listHelper($scope, from);
+		var todoId = list[id].id;
+		var moveToDoingPromise = $http({
+			method: 'GET',
+			url: "/move/" + from + "/todo/" + todoId,
+      		headers: {'Content-Type':  "application/x-www-form-urlencoded; charset=utf-8"}
+		});
+		moveToDoingPromise.success(function(data, status){
+			$scope.todos.push(list.splice(id, 1)[0]);
+		});
+		moveToDoingPromise.error(function(data){
+			alert("Move to todo failed");
+		});	
+	}
+	$scope.removeFromDone=function(id, from){
+		var list = listHelper($scope, from);
+		var todoId = list[id].id;
+		var moveToDoingPromise = $http({
+			method: 'GET',
+			url: "/remove/" + from + "/" + todoId,
+      		headers: {'Content-Type':  "application/x-www-form-urlencoded; charset=utf-8"}
+		}).
+		success(function(data, status){
+			list.splice(id, 1);
+		}).
+		error(function(data){
+			alert("Remove failed");
+		});	
+	}
+	$scope.editNote=function(id, from){
+	    var list = listHelper($scope, from);
+	    var todoId = list[id].id;
+
+		var newText = prompt("Please edit your note", list[id].text);
+
+	    var editPromise = $http.post('/updateTodo',{
+	    	id: list[id].id,
+	    	text: newText
+	    }).
+	    success(function(data){
+			list[id].text = newText;
+	    }).
+	    error(function(data){
+	    	alert("Update failed");
+	    });
+	}
+	$scope.addNewNote=function(){
+	    var newNote = prompt("Please create a new note");		
+
+    	var addPromise = $http({
+    		method: 'POST',
+    		url: '/addTodo', 
+    		data: newNote,
+    		headers: {
+    			'Content-Type': 'text/plain'
+    		}
+    	}).
+    	success(function(data){
+    		$scope.todos.push({ id: data.id, text: newNote });
+    	}).
+    	error(function(data){
+    		alert("Insert failed");
+    	});
+	}
+});
+
+
+app.controller('PatientController',  function($scope,$http,patientService) {
+	var patients = [];
+	patientService.patients(function(data, status, headers, config)  {
+		for (var i = 0; i < data.entry.length; i++) {
+		    var patient = {};
+		  	patient['id'] = data.entry[i].id;
+		  	patient['name'] = data.entry[i].content.name[0].given[0] + " " + data.entry[i].content.name[0].family[0];
+		  	patient['MRN'] = data.entry[i].id;
+			patient['MRN'] = data.entry[i].id.match(/Patient\/([^]*)/)[1];
+		  	
+		  	patient['dob'] = data.entry[i].content.birthDate;
+		  	patient['from'] = "7 South";
+				patient['primary'] = "Headache";
+				patient['physician'] = "Dr. Braunstein";
+				patients.push(patient);
+			}
+	});
 	var currentPatient=-1;
 	var filterArray=["7 South", "8 North", "Recent", "All"];
 	var d=document.querySelector('paper-dialog');
-
-    /*var responsePromise = $http({
-      method: 'GET',
-	    url: "/patients",
-      headers: {'Content-Type':  "application/x-www-form-urlencoded; charset=utf-8"}
-    });
-
-    responsePromise.success(function(data, status, headers, config)  {
-      console.log(data);
-      for (var i = 0; i < data.length; i++) {
-	    var patient = {};
-      	patient['id'] = data[i].id;
-      	patient['name'] = data[i].nameFirst + " " + data[i].nameLast;
-      	patient['MRN'] = data[i].id;
-		//patient['MRN'] = /\\(\d+)/.data[i].id;
-      	console.log(patient.MRN);
-      	patient['dob'] = "04/07/2015";
-      	patient['from'] = "7 South";
-      	patient['primary'] = "Headache";
-      	patient['physician'] = "Dr. Braunstein";
-      	patients.push(patient);
-      }      
-	});
-	*/
-	var responsePromise = $http({
-      method: 'GET',
-	    url: "http://fhirtest.uhn.ca/baseDstu1/Patient?_format=json",
-		//url: "http://fhir.healthintersections.com.au/open/Patient?_format=json",
-      headers: {'Content-Type':  "application/x-www-form-urlencoded; charset=utf-8"}
-    });
-
-    responsePromise.success(function(data, status, headers, config)  {
-      console.log(data);
-      for (var i = 0; i < data.entry.length; i++) {
-	    var patient = {};
-      	patient['id'] = data.entry[i].id;
-      	patient['name'] = data.entry[i].content.name[0].given[0] + " " + data.entry[i].content.name[0].family[0];
-      	patient['MRN'] = data.entry[i].id;
-		patient['MRN'] = data.entry[i].id.match(/Patient\/([^]*)/)[1];
-      	console.log(patient.MRN);
-      	patient['dob'] = data.entry[i].content.birthDate;
-      	patient['from'] = "7 South";
-      	patient['primary'] = "Headache";
-      	patient['physician'] = "Dr. Braunstein";
-      	patients.push(patient);
-      }      
-    });
-    responsePromise.error(function(data, status, headers, config) {
-      alert("AJAX failed!");
-    });
-
 
     // Trying to hit local server
 	// var patientPromise = $http({
@@ -103,7 +260,6 @@ app.controller('PatientController',  function($scope,$http) {
 	//set up scope variables
 	$scope.filter=3;
 	$scope.patients=patients;
-	console.log($scope.filter);
 	$scope.handleFilter=function(){
 		$scope.filter=data;
 	}
@@ -191,13 +347,10 @@ app.controller('PatientController',  function($scope,$http) {
 app.controller('PatientDetailsController',function($scope, $http, $attrs){
 
     //Use FHIR.js or another js package to load data
-    $scope.patientDetails = {"firstName": "Akshar",
-                                "lastName": "Rawal",
-                                "address": "302, 10th St., Atlanta",
-                                "email": "akshar@iamsick.com",
-                                "phone": "(302) 303 3030"};
+    $scope.patientDetails = {};
 
-    var id = "17565";
+    var url_array = (window.location.href).split('/');
+    var id=url_array[url_array.length-1];
     var patient = {};
 
     //////////////////////////////////////////////////////////////////////////////////
@@ -206,7 +359,7 @@ app.controller('PatientDetailsController',function($scope, $http, $attrs){
     var responsePromise = $http({
       method: 'GET',
 	    //url: "http://fhirtest.uhn.ca/baseDstu1/Patient?_format=json",
-		url: "http://fhir.healthintersections.com.au/open/Patient?_format=json&_id=" + id,
+		url: "http://fhirtest.uhn.ca/baseDstu1/Patient?_format=json&_id=" + id,
       headers: {'Content-Type':  "application/x-www-form-urlencoded; charset=utf-8"}
     });
 
@@ -214,7 +367,12 @@ app.controller('PatientDetailsController',function($scope, $http, $attrs){
       //console.log(data);
       patient = data.entry[0].content;
       console.log(patient);
-      console.log(patient.name[0].given[0] + patient.name[0].family[0]);      
+      console.log(patient.name[0].given[0] + patient.name[0].family[0]);
+      $scope.patientDetails= {"firstName": patient.name[0].given[0],
+                                "lastName": patient.name[0].family[0],
+                                "address": patient.address[0].city+ " " +patient.address[0].zip,
+                                "gender": patient.gender[0].coding[0],
+                                "phone": "(302) 303 3030"};
     });    
 
     //////////////////////////////////////////////////////////////////////////////////
@@ -372,174 +530,8 @@ app.controller('PatientDetailsController',function($scope, $http, $attrs){
       console.log(availableTests);
       $scope.availableTests = availableTests;
     });    
-								
-	// var data = [4, 8, 15, 16, 23, 42];
-	
-	// var w=960,h=500;		 
-	
-	// var x = d3.scale.linear()
- //    .domain([0, d3.max(data)])
- //    .range([0, 420]); 
-	 
-	// d3.select(".chart")
-	//   .selectAll("div")
-	// 	.data(data)
-	//   .enter().append("div")
-	// 	.style("width", function(d) { return d * 10 + "px"; })
-	// 	.text(function(d) { return d; });
 });
 
-function listHelper($scope, from) {
-	switch(from) {
-		case "todo":
-			return $scope.todos;
-		case "doing":
-			return $scope.doings;
-		case "done":
-			return $scope.dones;
-	}
-};
-
-app.controller('TaskController',function($scope, $http){
-	// $scope.todos=[{ id: 1, text: "Replace Mr Foley's catheter" },
-	// 			  { id: 2, text: "Cure the Patients" }];
-	// $scope.doings=[{ id: 3, text: "Check respirator labs" },
-	// 			   { id: 4, text: "Check crocin order" }];
-	// $scope.dones=[{id: 5, text: "Meet My Friends" }];
-	$scope.todos = [];
-	$scope.doings = [];
-	$scope.dones = [];
-
-	// get the list of todos
-    var todoPromise = $http({
-      method: 'GET',
-	  url: "/todos",
-      headers: {'Content-Type':  "application/x-www-form-urlencoded; charset=utf-8"}
-    });
-
-    todoPromise.success(function(data, status, headers, config)  {
-      console.log(data);
-      for (var i = 0; i < data.length; i++) {
-	    switch(data[i].state) {
-	    	// Todo
-	    	case 0:
-    			$scope.todos.push({ id: data[i].id, text: data[i].text} );
-    			break;
-	    	// Done
-	    	case 100:
-    			$scope.dones.push({ id: data[i].id, text: data[i].text} );
-	    		break;
-	    	case -1:
-	    		break;
-	    	// Doing and default case
-    		case 1:
-    		default:
-    			$scope.doings.push({ id: data[i].id, text: data[i].text} );
-	    		break;
-	    }
-      }
-    });
-    todoPromise.error(function(data, status, headers, config) {
-      alert("GET todos failed!");
-    });
-	
-	
-	$scope.moveToDoing=function(id, from){
-		var list = listHelper($scope, from);
-		var todoId = list[id].id;
-		var moveToDoingPromise = $http({
-			method: 'GET',
-			url: "/move/" + from + "/doing/" + todoId,
-      		headers: {'Content-Type':  "application/x-www-form-urlencoded; charset=utf-8"}
-		});
-		moveToDoingPromise.success(function(data, status){
-			$scope.doings.push(list.splice(id, 1)[0]);
-		});
-		moveToDoingPromise.error(function(data){
-			alert("Move to doing failed");
-		});
-	}
-	$scope.moveToDone=function(id, from){
-		var list = listHelper($scope, from);
-		var todoId = list[id].id;
-		var moveToDoingPromise = $http({
-			method: 'GET',
-			url: "/move/" + from + "/done/" + todoId,
-      		headers: {'Content-Type':  "application/x-www-form-urlencoded; charset=utf-8"}
-		});
-		moveToDoingPromise.success(function(data, status){
-			$scope.dones.push(list.splice(id, 1)[0]);
-		});
-		moveToDoingPromise.error(function(data){
-			alert("Move to done failed");
-		});	
-	}
-	$scope.moveToTodo=function(id, from){
-		var list = listHelper($scope, from);
-		var todoId = list[id].id;
-		var moveToDoingPromise = $http({
-			method: 'GET',
-			url: "/move/" + from + "/todo/" + todoId,
-      		headers: {'Content-Type':  "application/x-www-form-urlencoded; charset=utf-8"}
-		});
-		moveToDoingPromise.success(function(data, status){
-			$scope.todos.push(list.splice(id, 1)[0]);
-		});
-		moveToDoingPromise.error(function(data){
-			alert("Move to todo failed");
-		});	
-	}
-	$scope.removeFromDone=function(id, from){
-		var list = listHelper($scope, from);
-		var todoId = list[id].id;
-		var moveToDoingPromise = $http({
-			method: 'GET',
-			url: "/remove/" + from + "/" + todoId,
-      		headers: {'Content-Type':  "application/x-www-form-urlencoded; charset=utf-8"}
-		}).
-		success(function(data, status){
-			list.splice(id, 1);
-		}).
-		error(function(data){
-			alert("Remove failed");
-		});	
-	}
-	$scope.editNote=function(id, from){
-	    var list = listHelper($scope, from);
-	    var todoId = list[id].id;
-
-		var newText = prompt("Please edit your note", list[id].text);
-
-	    var editPromise = $http.post('/updateTodo',{
-	    	id: list[id].id,
-	    	text: newText
-	    }).
-	    success(function(data){
-			list[id].text = newText;
-	    }).
-	    error(function(data){
-	    	alert("Update failed");
-	    });
-	}
-	$scope.addNewNote=function(){
-	    var newNote = prompt("Please create a new note");		
-
-    	var addPromise = $http({
-    		method: 'POST',
-    		url: '/addTodo', 
-    		data: newNote,
-    		headers: {
-    			'Content-Type': 'text/plain'
-    		}
-    	}).
-    	success(function(data){
-    		$scope.todos.push({ id: data.id, text: newNote });
-    	}).
-    	error(function(data){
-    		alert("Insert failed");
-    	});
-	}
-});
 
 app.controller('OtherController',function($scope){
 	$scope.selected=1;
