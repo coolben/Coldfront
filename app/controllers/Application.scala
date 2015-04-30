@@ -11,6 +11,7 @@ import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.util.{Failure, Try, Success}
 import scala.slick.driver.H2Driver.simple._
+import scala.slick.jdbc.meta.MTable
 
 import DB._
 
@@ -92,19 +93,21 @@ object Application extends Controller {
     // Create the schema
     //(users.ddl ++ patients.ddl ++ todos.ddl).create
 
-    (patients.ddl ++ todos.ddl).create
-    // Insert some fake data
-    patients += Patient(1, "Doe", "John", "2005-01-01")
-    patients += Patient(2, "Doe", "Jane", "2004-07-11")
-    // users += User(1, "vu")
-    // users += User(2, "john")
-    todos += Todo(1, 1, "Replace catheter", 0)
-    todos += Todo(2, 1, "Players gonna play play play", 100)
-    todos += Todo(3, 1, "haters gonna hate hate hate", 100)
-    todos += Todo(4, 1, "Turn patient", 100)
-    todos += Todo(5, 2, "Shake it off. Shake it off.", 0)
-    todos += Todo(6, 2, "Insert vent", 100)
-    todos += Todo(7, 2, "Oral vent care", 0)
+     if (MTable.getTables.list(session).size < 2) {
+        (patients.ddl ++ todos.ddl).create
+        // Insert some fake data
+        patients += Patient(1, "Doe", "John", "2005-01-01")
+        patients += Patient(2, "Doe", "Jane", "2004-07-11")
+        // users += User(1, "vu")
+        // users += User(2, "john")
+        todos += Todo(1, 1, "Replace catheter", 0)
+        todos += Todo(2, 1, "Visit Mr. Johnson", 100)
+        todos += Todo(3, 1, "See the attending at the end of the day", 100)
+        todos += Todo(4, 1, "Turn patient", 100)
+        todos += Todo(5, 2, "Retrieve labs", 0)
+        todos += Todo(6, 2, "Insert vent", 100)
+        todos += Todo(7, 2, "Oral vent care", 0)
+    }
 
     val orderWS = WS.url(baseUrl + "DiagnosticOrder?_format=json").get().map{
       results =>
@@ -241,7 +244,7 @@ object Application extends Controller {
       val body: Option[String] = request.body.asText
       val note = request.queryString.get("note").flatMap(_.headOption)
       val mrn = request.queryString.get("mrn").flatMap(_.headOption)      
-      if (body.isDefined){
+      if (note.isDefined){ 
           db.withSession { implicit session =>
             val todoId = (todos returning todos.map(_.id)) += Todo(0,mrn.get.toLong,note.get, 0)
             Ok(Json.obj("status" ->"OK", "id" -> todoId ))  

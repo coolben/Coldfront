@@ -241,9 +241,9 @@ app.controller('TaskController',function($scope, $http,patientService){
 	    var newNote = prompt("Please create a new note");		
 
     	var addPromise = $http({
-    		method: 'POST',
+    		method: 'GET',
     		url: '/addTodo', 
-    		data: {note: newNote, mrn: patients[0]['MRN']},
+    		params: {note: newNote, mrn: patients[0]['MRN']},
     		headers: {
     			'Content-Type': 'text/plain'
     		}
