@@ -71,6 +71,7 @@ app.controller('TaskController',function($scope, $http,patientService){
 		  	
 		  	patient['dob'] = data.entry[i].content.birthDate;
 		  	patient['from'] = "7 South";
+		  	patient['filtered']=false;
 				patient['primary'] = "Headache";
 				patient['physician'] = "Dr. Braunstein";
 				patients.push(patient);
@@ -116,6 +117,48 @@ app.controller('TaskController',function($scope, $http,patientService){
       alert("GET todos failed!");
     });
 	
+	$scope.filter=function (index) {
+		var todoPromise;
+		if(patients[index]['filtered']){
+		    todoPromise = $http({
+		      method: 'GET',
+			  url: "/todos",
+		      headers: {'Content-Type':  "application/x-www-form-urlencoded; charset=utf-8"}
+		    });
+		}
+		else{
+
+		    todoPromise = $http({
+		      method: 'GET',
+			  url: "/todos/"+patients[index]["MRN"],
+		      headers: {'Content-Type':  "application/x-www-form-urlencoded; charset=utf-8"}
+		    });
+		}
+	    todoPromise.success(function(data, status, headers, config)  {
+	    	$scope.todos = [];
+			$scope.doings = [];
+			$scope.dones = [];
+	      	for (var i = 0; i < data.length; i++) {
+		    	switch(data[i].state) {
+			    	// Todo
+			    	case 0:
+		    			$scope.todos.push({ id: data[i].id, text: data[i].text} );
+		    			break;
+			    	// Done
+			    	case 100:
+		    			$scope.dones.push({ id: data[i].id, text: data[i].text} );
+			    		break;
+			    	case -1:
+			    		break;
+			    	// Doing and default case
+		    		case 1:
+		    		default:
+		    			$scope.doings.push({ id: data[i].id, text: data[i].text} );
+			    		break;
+		    	}
+	      	 }
+	    });
+	}
 	
 	$scope.moveToDoing=function(id, from){
 		var list = listHelper($scope, from);
@@ -200,7 +243,7 @@ app.controller('TaskController',function($scope, $http,patientService){
     	var addPromise = $http({
     		method: 'POST',
     		url: '/addTodo', 
-    		data: newNote,
+    		data: {note: newNote, mrn: patients[0]['MRN']},
     		headers: {
     			'Content-Type': 'text/plain'
     		}
@@ -258,6 +301,8 @@ app.controller('PatientController',  function($scope,$http,patientService) {
 	// });
 
 	//set up scope variables
+
+
 	$scope.filter=3;
 	$scope.patients=patients;
 	$scope.handleFilter=function(){

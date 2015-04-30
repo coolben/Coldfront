@@ -177,7 +177,7 @@ ul{
 	  				<paper-shadow  z='1' class='header-1 small-12 ' style='margin-bottom:10px;background:#E0F7FA'>
 	  					<div class=''>Patients</div>
 	  					</paper-shadow>
-	  				<div class='row' ng-repeat="patient in patients">
+	  				<div class='row' ng-repeat="patient in patients track by $index">
 							<paper-shadow  z='1' class='card  small-10 small-offset-1  columns' style='margin:10px;margin-bottom:40px;background:#fff'>
 					    	<div class='small-3 columns'>
 					    		<img src='@routes.Assets.at("img/female.png")' style="margin-top:15px;width:50px;height:auto" />
@@ -185,7 +185,7 @@ ul{
 					    	<div class="small-9 columns">
 					    		{{patient.name}}<br />
 					    		{{patient.primary}}<br />
-					    		<a href="#">Notes</a> | <a href="#">Labs</a> | <a href="#">Todos</a>
+					    		<a href="patientpage/{{patient.mrn}}">Notes</a> | <a href="patientpage/{{patient.mrn}}">Labs</a> | <a href="#" ng-click="filter($index)">Todos</a>
 					    	</div>
 							</paper-shadow>
 						</div>

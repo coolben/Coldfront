@@ -200,6 +200,13 @@ object Application extends Controller {
     }
   }
 
+  def filterTodos(patientId:Long) = Action{
+    db.withSession{ implicit session =>
+              val q = for {t <- todos if t.patientId === patientId} yield t 
+      Ok(Json.toJson(q.list))
+    }
+  }  
+
   def changeTodoState(todoId: Long, state: Int) = Action{
     try {
       db.withSession { implicit session =>
@@ -232,13 +239,15 @@ object Application extends Controller {
   def addTodo = Action { request =>
       // Add the todo
       val body: Option[String] = request.body.asText
+      val note = request.queryString.get("note").flatMap(_.headOption)
+      val mrn = request.queryString.get("mrn").flatMap(_.headOption)      
       if (body.isDefined){
           db.withSession { implicit session =>
-            val todoId = (todos returning todos.map(_.id)) += Todo(0, 1, body.get, 0)
+            val todoId = (todos returning todos.map(_.id)) += Todo(0,mrn.get.toLong,note.get, 0)
             Ok(Json.obj("status" ->"OK", "id" -> todoId ))  
           }
       } else {
-          BadRequest("Failed to insert note")
+          Ok("SD")
       }
   }
 
