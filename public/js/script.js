@@ -123,14 +123,39 @@ app.controller('TaskController',function($scope, $http,patientService){
 	$scope.filter=function (index) {
 		var todoPromise;
 		if(patients[index]['filtered']){
+			patients[index]['filtered']=false;
 		    todoPromise = $http({
 		      method: 'GET',
 			  url: "/todos",
 		      headers: {'Content-Type':  "application/x-www-form-urlencoded; charset=utf-8"}
 		    });
+		    todoPromise.success(function(data, status, headers, config)  {
+		    	$scope.todos = [];
+				$scope.doings = [];
+				$scope.dones = [];
+		      	for (var i = 0; i < data.length; i++) {
+			    	switch(data[i].state) {
+				    	// Todo
+				    	case 0:
+			    			$scope.todos.push({ id: data[i].id, text: data[i].text} );
+			    			break;
+				    	// Done
+				    	case 100:
+			    			$scope.dones.push({ id: data[i].id, text: data[i].text} );
+				    		break;
+				    	case -1:
+				    		break;
+				    	// Doing and default case
+			    		case 1:
+			    		default:
+			    			$scope.doings.push({ id: data[i].id, text: data[i].text} );
+				    		break;
+			    	}
+		      	 }
+		    });
 		}
 		else{
-
+			patients[index]['filtered']=true;
 		    todoPromise = $http({
 		      method: 'GET',
 			  url: "/todos/"+patients[index]["MRN"],
@@ -161,6 +186,38 @@ app.controller('TaskController',function($scope, $http,patientService){
 		    	}
 	      	 }
 	    });
+	}
+
+	$scope.removeFilter=function(){
+			todoPromise = $http({
+		      method: 'GET',
+			  url: "/todos",
+		      headers: {'Content-Type':  "application/x-www-form-urlencoded; charset=utf-8"}
+		    });
+		    todoPromise.success(function(data, status, headers, config)  {
+		    	$scope.todos = [];
+				$scope.doings = [];
+				$scope.dones = [];
+		      	for (var i = 0; i < data.length; i++) {
+			    	switch(data[i].state) {
+				    	// Todo
+				    	case 0:
+			    			$scope.todos.push({ id: data[i].id, text: data[i].text} );
+			    			break;
+				    	// Done
+				    	case 100:
+			    			$scope.dones.push({ id: data[i].id, text: data[i].text} );
+				    		break;
+				    	case -1:
+				    		break;
+				    	// Doing and default case
+			    		case 1:
+			    		default:
+			    			$scope.doings.push({ id: data[i].id, text: data[i].text} );
+				    		break;
+			    	}
+		      	 }
+		    });
 	}
 	
 	$scope.moveToDoing=function(id, from){
