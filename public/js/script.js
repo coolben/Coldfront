@@ -14,7 +14,8 @@ app.service('patientService', function($http){
 			var responsePromise = $http({
       				method: 'GET',
 	    			//url: "http://fhirtest.uhn.ca/baseDstu1/Patient?_format=json",
-	    			url: "http://fhir.healthintersections.com.au/open/Patient?_format=json&_count=100",
+	    			//url: "http://fhir.healthintersections.com.au/open/Patient?_format=json&_count=100",
+	    			url: "https://taurus.i3l.gatech.edu:8443/HealthPort/fhir/Patient?_format=json",
       				headers: {'Content-Type':  "application/x-www-form-urlencoded; charset=utf-8"}
     		});
 
@@ -476,13 +477,13 @@ app.controller('PatientDetailsController',function($scope, $http, $attrs){
       method: 'GET',
 	    //url: "http://fhir.healthintersections.com.au/open/Patient?_format=json&_id=" + id,
 		//url: "http://fhirtest.uhn.ca/baseDstu1/Patient?_format=json&_id=" + id,
-		url: "https://taurus.i3l.gatech.edu:8443/HealthPort/fhir/Patient?_format=json&_id=" + id,
+		url: "https://taurus.i3l.gatech.edu:8443/HealthPort/fhir/Patient/" + id + "?_format=json",
       headers: {'Content-Type':  "application/x-www-form-urlencoded; charset=utf-8"}
     });
 
     responsePromise.success(function(data, status, headers, config)  {
       console.log(data);
-      patient = data.entry[0].content;
+      patient = (checkProp(data, 'entry') == true ? data.entry[0].content : data);
       console.log(patient);
       console.log(patient.name[0].given[0] + patient.name[0].family[0]);
 
@@ -517,12 +518,12 @@ app.controller('PatientDetailsController',function($scope, $http, $attrs){
       method: 'GET',
 	    //url: "http://fhirtest.uhn.ca/baseDstu1/Observation?_format=json&subject._id=" + id,
 		//url: "http://fhir.healthintersections.com.au/open/Observation?_format=json&subject._id=" + id,
-		url: "https://taurus.i3l.gatech.edu:8443/HealthPort/fhir/Observation?_format=json&subject._id=" + id;
+		url: "https://taurus.i3l.gatech.edu:8443/HealthPort/fhir/Observation?_format=json&subject:Patient=" + id,
       headers: {'Content-Type':  "application/x-www-form-urlencoded; charset=utf-8"}
     });
 
     responsePromise.success(function(data, status, headers, config)  {
-      //console.log(data);
+      console.log(data);
       observations = data.entry;
 
       //Loop through all observations and sort by lab tests(data) and notes
