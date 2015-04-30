@@ -136,12 +136,10 @@ ul{
         <core-pages selected="{{selected}}" bind-polymer>
             <div>
 						<paper-shadow class='' z='1' style='min-height:20px'>
-                <div ng-repeat="test in availableTests.data">
-                		<b>Code: {{test.obsCode}}</b><br />
-                    <div ng-repeat="note in test.tests">
-                		    {{note.value}}
-                    </div>
-                    <div class='datetext'>On {{test.obsDate}}</div>
+                <div ng-repeat="note in notes">
+                		<b>{{note.title}}</b><br />
+                    <p>{{note.text}}</p>                    
+                    <div class='datetext'>{{note.createdBy}} on {{note.created}}</div>
                 </div>
 						</paper-shadow>
             </div>

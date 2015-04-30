@@ -430,20 +430,33 @@ app.controller('PatientDetailsController',function($scope, $http, $attrs){
     availableTests['data'] = [];
     availableTests['notes'] = [];
 
+    id=18066;
+
     var responsePromise = $http({
       method: 'GET',
-	    //url: "http://fhirtest.uhn.ca/baseDstu1/Patient?_format=json",
-		url: "http://fhir.healthintersections.com.au/open/Observation?_format=json&id=" + id,
+	    url: "http://fhirtest.uhn.ca/baseDstu1/Observation?_format=json&subject._id=" + id,
+		//url: "http://fhir.healthintersections.com.au/open/Observation?_format=json&id=" + id,
       headers: {'Content-Type':  "application/x-www-form-urlencoded; charset=utf-8"}
     });
 
     responsePromise.success(function(data, status, headers, config)  {
-      //console.log(data);
+      console.log(data);
       observations = data.entry;
 
       //Loop through all observations and sort by lab tests(data) and notes
-      for(var i = 0; i < parseInt(data.totalResults); i++) {      	
-      	var index = availableTests.codes.indexOf(observations[i].content.name.coding[0].code);
+      for(var i = 0; i < observations.length; i++) {     
+        var code;
+        var index; 	
+        console.log(typeof observations[i].content.name);
+      	if(typeof observations[i].content.name != 'undefined') {
+      	  index = availableTests.codes.indexOf(observations[i].content.name.coding[0].code);
+      	  code = observations[i].content.name.coding[0].code;
+      	}
+      	else {
+      		index = -1;
+      		code = -1;
+      	}
+      	
 
       	//Check of there is already an  observation with the same code
       	//If there isn't, add a new observation entry
@@ -454,12 +467,14 @@ app.controller('PatientDetailsController',function($scope, $http, $attrs){
           console.log(i);
 
           //Add the code to the list of known codes
- 		  availableTests.codes.push(observations[i].content.name.coding[0].code);
+ 		  availableTests.codes.push(code);
 
  		  //Add the code and display names to the new observation
  		  //This data is irrespective of whether the observation is a test or a note
-          document.obsCode = observations[i].content.name.coding[0].code;
- 		  document.obsName = observations[i].content.name.coding[0].display;
+          document.obsCode = code;
+          if (code != -1) {
+            document.obsName = observations[i].content.name.coding[0].display;	
+          } 		  
 
  		  //Check if the observation is a test
  		  if (observations[i].content.valueQuantity != undefined) {
@@ -495,7 +510,6 @@ app.controller('PatientDetailsController',function($scope, $http, $attrs){
  		//If there is already an entry for the current observation code, 
  		//update the observation list with the values for the new entry
         else {          
-          var code = observations[i].content.name.coding[0].code;
           var tests = {};	
           var document = {};
           document['tests'] = [];
@@ -524,9 +538,11 @@ app.controller('PatientDetailsController',function($scope, $http, $attrs){
 
             else {
               //If this is a note for a new condition, add a new entry to the notes
-              document.obsCode = observations[i].content.name.coding[0].code;
- 		      document.obsName = observations[i].content.name.coding[0].display;
- 		      tests.value = observations[i].content.valueString;
+              document.obsCode = code;
+ 		      if (code != -1) {
+                document.obsName = observations[i].content.name.coding[0].display;	
+              } 
+              tests.value = observations[i].content.valueString;
 
  		      //Check if there is a time that the test was issued or published and add it to the entry
               if (observations[i].content.issued != undefined) { 		    
@@ -573,6 +589,8 @@ app.controller('PatientDetailsController',function($scope, $http, $attrs){
       }     
       console.log("available tests");
       console.log(availableTests);
+      $scope.availableTests = availableTests;
+      console.log($scope.availableTests);
     });    
 });
 
