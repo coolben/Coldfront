@@ -408,6 +408,7 @@ app.controller('PatientDetailsController',function($scope, $http, $attrs){
 
     //Use FHIR.js or another js package to load data
     $scope.patientDetails = {};
+    $scope.orders = [{"text": "Order 1", "ordered": "3/5/2015", "orderedBy": "Dr. Love", "completed": "", "completedBy": "Uncle Ben", "completedOn": "3/5/2015"}];
 
     var url_array = (window.location.href).split('/');
     var id=url_array[url_array.length-1];
