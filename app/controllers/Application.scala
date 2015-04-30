@@ -246,8 +246,14 @@ object Application extends Controller {
       val mrn = request.queryString.get("mrn").flatMap(_.headOption)      
       if (note.isDefined){ 
           db.withSession { implicit session =>
+            val q = for {t <- todos if t.patientId === mrn.get.toLong} yield t 
+            if (q.list.size==0){
+              patients += Patient(mrn.get.toLong, "", "", "2004-07-11")
+            }
+
             val todoId = (todos returning todos.map(_.id)) += Todo(0,mrn.get.toLong,note.get, 0)
-            Ok(Json.obj("status" ->"OK", "id" -> todoId ))  
+
+            Ok(Json.obj("status" ->"Ok", "id" -> todoId ))  
           }
       } else {
           Ok("SD")

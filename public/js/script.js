@@ -45,6 +45,8 @@ app.controller('ToolbarController',  function($scope,patientService) {
 
 
 app.controller('TaskController',function($scope, $http,patientService){
+	var d=document.getElementById('newnote');
+
 	// $scope.todos=[{ id: 1, text: "Replace Mr Foley's catheter" },
 	// 			  { id: 2, text: "Cure the Patients" }];
 	// $scope.doings=[{ id: 3, text: "Check respirator labs" },
@@ -238,19 +240,28 @@ app.controller('TaskController',function($scope, $http,patientService){
 	    	alert("Update failed");
 	    });
 	}
-	$scope.addNewNote=function(){
-	    var newNote = prompt("Please create a new note");		
 
+	$scope.addNewNote=function(){
+		d.toggle();
+	}
+
+	$scope.closeNewTodoView=function(){
+		d.toggle();
+	}
+
+	$scope.saveNewNote=function(){
+	    d.toggle();
     	var addPromise = $http({
     		method: 'GET',
     		url: '/addTodo', 
-    		params: {note: newNote, mrn: patients[0]['MRN']},
+    		params: {note:  $scope.newnote, mrn: $scope.newmrn.MRN},
     		headers: {
     			'Content-Type': 'text/plain'
     		}
     	}).
     	success(function(data){
-    		$scope.todos.push({ id: data.id, text: newNote });
+
+    		$scope.todos.push({ id: $scope.newmrn.MRN, text: $scope.newnote });
     	}).
     	error(function(data){
     		alert("Insert failed");
@@ -261,6 +272,10 @@ app.controller('TaskController',function($scope, $http,patientService){
 
 app.controller('PatientController',  function($scope,$http,patientService) {
 	var patients = [];
+	var currentPatient=-1;
+	var filterArray=["7 South", "8 North", "Recent", "All"];
+	var d=document.getElementById('dialog');	
+
 	patientService.patients(function(data, status, headers, config)  {
 		for (var i = 0; i < data.entry.length; i++) {
 		    var patient = {};
@@ -276,9 +291,7 @@ app.controller('PatientController',  function($scope,$http,patientService) {
 				patients.push(patient);
 			}
 	});
-	var currentPatient=-1;
-	var filterArray=["7 South", "8 North", "Recent", "All"];
-	var d=document.querySelector('paper-dialog');
+
 
     // Trying to hit local server
 	// var patientPromise = $http({

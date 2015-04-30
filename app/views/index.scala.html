@@ -173,20 +173,20 @@ ul{
 	  <div>
 
 	  <div class='row' ng-controller='TaskController'>
-	  				<paper-dialog id="newnote" heading="Patient View">
-						<hr />
-						<p> MRN: {{mrn}}</p>
-						<p> DOB: {{dob}}</p>
-						<p> Cheif Complaint: {{primary}}</p>
-						<p> Physician: {{physician}}</p>
-					  <paper-button raised class='colored' style='background-color:#03A9F4;color:#222' ng-click="closePatientView()">Done</paper-button>
-					  <paper-button affirmative default autofocus style='background-color:#03A9F4;color:#222' >
-					  <a href="patientpage/{{mrn}}" target="_blank">Open in New Tab</a></paper-button>
+	  				<paper-dialog id="newnote" heading="Add New Note">
+						<input  type ='text'  placeholder='Enter new Note' ng-model="newnote"/><br />
+						<select ng-model="newmrn" ng-options="patient  as patient.name for patient in patients"></select><br />
+						<paper-button affirmative default autofocus style='background-color:#03A9F4;color:#222' ng-click='saveNewNote()' >Save</paper-button>
+					  <paper-button raised class='colored' style='background-color:#03A9F4;color:#222' ng-click="closeNewTodoView()">Cancel</paper-button>
+					  
 					</paper-dialog>						
 
 	  				<div class='large-3 columns' style="background:#E0F7FA;min-height:100%;padding:0px">
 	  				<paper-shadow  z='1' class='header-1 small-12 ' style='margin-bottom:10px;background:#E0F7FA'>
 	  					<div class=''>Patients</div>
+	  					<div style='position:absolute;bottom:5px;font-size:0.8em'>
+									<a herf="#" ng-click="addNewNote()">Remove Filter</a>
+							</div>
 	  					</paper-shadow>
 
 	  				<div class='row' ng-repeat="patient in patients track by $index">
