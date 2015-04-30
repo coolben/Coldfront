@@ -281,7 +281,7 @@ object Application extends Controller {
     }
   }
 
-  def getPatientViews(patientId: Long) = Action {
+  def getPatientViews(patientId: String) = Action {
     Ok(views.html.patientView(patientId))
   }
 
