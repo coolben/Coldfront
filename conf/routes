@@ -19,7 +19,7 @@ GET     /patient/:patientId/observations    controllers.Application.getObservati
 GET     /patientpage/:patientId				controllers.Application.getPatientViews(patientId:String)
 
 GET     /todos                              controllers.Application.listTodos
-GET     /todos/:patientId                   controllers.Application.filterTodos(patientId: Long)
+GET     /todos/:patientId                   controllers.Application.filterTodos(patientId: String)
 GET    /addTodo                  	        controllers.Application.addTodo
 POST    /updateTodo  				        controllers.Application.updateTodo
 GET     /move/todo/doing/:todoId  	        controllers.Application.changeTodoState(todoId: Long, state:Int = 1)

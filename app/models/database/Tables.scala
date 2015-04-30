@@ -63,10 +63,10 @@ class Notes(tag: Tag) extends Table[Note](tag, "NOTES"){
   def * = (id, text) <> (Note.tupled, Note.unapply)
 }
 
-case class Todo(id: Long, patientId:Long, text: String, state: Int)
+case class Todo(id: Long, patientId:String, text: String, state: Int)
 class Todos(tag: Tag) extends Table[Todo](tag, "TODOS"){
   def id = column[Long]("TODO_ID", O.PrimaryKey, O.AutoInc)
-  def patientId = column[Long]("PATIENT_ID")
+  def patientId = column[String]("PATIENT_ID")
   def text = column[String]("TEXT")
 
   /*********
@@ -82,8 +82,6 @@ class Todos(tag: Tag) extends Table[Todo](tag, "TODOS"){
 
   def * = (id, patientId, text, state) <> (Todo.tupled, Todo.unapply)
 
-  def patient: ForeignKeyQuery[Patients, Patient] =
-    foreignKey("PATIENT_TODOS_FK", patientId, TableQuery[Patients])(_.id)
 }
 
 case class Observation(id: Long, text:String)
