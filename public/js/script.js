@@ -14,7 +14,7 @@ app.service('patientService', function($http){
 			var responsePromise = $http({
       				method: 'GET',
 	    			//url: "http://fhirtest.uhn.ca/baseDstu1/Patient?_format=json",
-	    			url: "http://fhir.healthintersections.com.au/open/Patient?_format=json",
+	    			url: "http://fhir.healthintersections.com.au/open/Patient?_format=json&_count=100",
       				headers: {'Content-Type':  "application/x-www-form-urlencoded; charset=utf-8"}
     		});
 
@@ -417,9 +417,9 @@ app.controller('PatientDetailsController',function($scope, $http, $attrs){
     //////////////////////////////////////////////////////////////////////////////////
     var responsePromise = $http({
       method: 'GET',
-	    url: "http://fhir.healthintersections.com.au/open/Patient?_format=json&id=" + id,
+	    //url: "http://fhir.healthintersections.com.au/open/Patient?_format=json&_id=" + id,
 		//url: "http://fhirtest.uhn.ca/baseDstu1/Patient?_format=json&_id=" + id,
-		//url: "https://taurus.i3l.gatech.edu:8443/HealthPort/fhir/Patient"
+		url: "https://taurus.i3l.gatech.edu:8443/HealthPort/fhir/Patient?_format=json&_id=" + id,
       headers: {'Content-Type':  "application/x-www-form-urlencoded; charset=utf-8"}
     });
 
@@ -428,12 +428,20 @@ app.controller('PatientDetailsController',function($scope, $http, $attrs){
       patient = data.entry[0].content;
       console.log(patient);
       console.log(patient.name[0].given[0] + patient.name[0].family[0]);
-      $scope.patientDetails= {"firstName": patient.name[0].given[0],
-                                "lastName": patient.name[0].family[0],
-                                "address": patient.address[0].city+ " " +patient.address[0].zip,
-                                "gender": patient.gender.coding[0].code,
+
+      $scope.patientDetails= {"firstName": (checkProp(patient, 'name') == true ? patient.name[0].given[0] : ""),
+                                "lastName": (checkProp(patient, 'name') == true ? patient.name[0].family[0] : ""),
+                                "address": (checkProp(patient, 'address') == true ? patient.address[0].city : "") + " " + (checkProp(patient, 'address') ? patient.address[0].zip : ""),
+                                "gender": (checkProp(patient, 'gender') == true ? patient.gender.coding[0].code : ""),
                                 "phone": "(302) 303 3030"};
-    });    
+    });
+
+    function checkProp(par, key){
+    	if(par.hasOwnProperty(key)){
+    		return true;
+    	}
+    	return false;
+    }    
 
     //////////////////////////////////////////////////////////////////////////////////
     //    Below two methods get all lab tests/observation details for the patient   //
@@ -451,8 +459,8 @@ app.controller('PatientDetailsController',function($scope, $http, $attrs){
     var responsePromise = $http({
       method: 'GET',
 	    //url: "http://fhirtest.uhn.ca/baseDstu1/Observation?_format=json&subject._id=" + id,
-		url: "http://fhir.healthintersections.com.au/open/Observation?_format=json&id=" + id,
-		//url: "https://taurus.i3l.gatech.edu:8443/HealthPort/fhir/Observation?_format=json&id=" + id;
+		//url: "http://fhir.healthintersections.com.au/open/Observation?_format=json&subject._id=" + id,
+		url: "https://taurus.i3l.gatech.edu:8443/HealthPort/fhir/Observation?_format=json&subject._id=" + id;
       headers: {'Content-Type':  "application/x-www-form-urlencoded; charset=utf-8"}
     });
 
