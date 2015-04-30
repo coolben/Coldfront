@@ -138,27 +138,29 @@ ul{
 						<paper-shadow class='' z='1' style='min-height:20px'>
                 <div ng-repeat="note in availableTests.notes">
                 		<b>{{note.obsCode}}</b><br />
-                    <p>{{note[tests][0].value}}</p>                    
-                    <div class='datetext'> On {{note[tests][0].obsDate}}</div>
+                    <div ng-repeat="test in note.tests">
+                      <p>{{test.value}}</p>                    
+                      <div class='datetext'> On {{test.obsDate}}</div>
+                    </div>
                 </div>
 						</paper-shadow>
             </div>
             <div>
     	        <paper-shadow class='' z='1' style='min-height:20px'>
     	        	
-    	        	<table ng-repeat="lab in labs"> 
-    	        	<b>{{lab.text}} - {{lab.created}}</b>
+    	        	<table ng-repeat="lab in availableTests.data"> 
+    	        	<b>{{lab.obsName}} - {{lab.obsCode}}</b>
     	        		<tr>
     	        			<th>Component</th>
-    	        			<th>Your Value</th>
-    	        			<th>Range </th>
+    	        			<th>Value</th>
     	        			<th>Units</th>
+                    <th>Date</th>
     	        		</tr>
-    	        		<tr  ng-repeat="value in lab.values">
-    	        			<td>{{value.name}}</td>
-    	        			<td>{{value.val}}</td>
-    	        			<td>{{value.range}}</td>
-    	        			<td>{{value.units}}</td>
+    	        		<tr  ng-repeat="test in lab.tests">
+    	        			<td>{{lab.obsName}}</td>
+    	        			<td>{{test.value}}</td>
+    	        			<td>{{lab.obsUnit}}</td>
+                    <td>{{test.obsDate}}
     	        		</tr>
     	        	</table>
               </paper-shadow>
